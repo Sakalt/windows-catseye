@@ -1,1 +1,1 @@
-https://sakalt.github.io/newaxis.html
+https://sakalt.github.io/windows-catseye/newaxis.html
