@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows Lux</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Courier New', Courier, monospace;
+            background: url('1.png') no-repeat center center fixed;
+            background-size: cover;
+            color: #00ff00;
+        }
+
+        #start-button {
+            cursor: pointer;
+            background-image: url('icon1.png');
+            width: 40px;
+            height: 40px;
+            background-size: cover;
+            position: absolute;
+            bottom: 20px;
+            left: 10px;
+        }
+
+        #start-menu {
+            position: absolute;
+            left: 10px;
+            bottom: 70px;
+            width: 250px;
+            background-color: #1a1a1a;
+            color: #00ff00;
+            border: 2px solid #666;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+            display: none;
+            z-index: 1000;
+        }
+
+        #start-menu ul {
+            list-style: none;
+            padding: 10px;
+            margin: 0;
+        }
+
+        #start-menu ul li {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        #start-menu ul li:hover {
+            background-color: #333;
+        }
+
+        .window {
+            position: absolute;
+            width: 300px;
+            height: 200px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid #00ff00;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+            border-radius: 5px;
+            z-index: 1000;
+            resize: both;
+            overflow: auto;
+            display: none;
+        }
+
+        .title-bar {
+            background: #1a1a1a;
+            color: #00ff00;
+            padding: 5px;
+            cursor: move;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .window-controls {
+            display: flex;
+        }
+
+        .window-controls button {
+            border: none;
+            color: #00ff00;
+            font-size: 14px;
+            width: 30px;
+            height: 30px;
+            border-radius: 5px;
+            margin: 0 2px;
+            cursor: pointer;
+            background: #1a1a1a;
+            transition: background 0.3s ease;
+        }
+
+        .window-controls button:hover {
+            background: #333;
+        }
+
+        .window-controls button:active {
+            background: #666;
+        }
+
+        #window-list {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 40px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: #00ff00;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 0 10px;
+            box-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+            overflow-x: auto;
+        }
+
+        .window-list-item {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .window-list-item.active {
+            background-color: #333;
+        }
+
+        #control-panel {
+            display: none;
+            position: absolute;
+            top: 50px;
+            left: 50px;
+            width: 300px;
+            height: 200px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid #00ff00;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+            border-radius: 5px;
+            z-index: 1000;
+            resize: both;
+            overflow: auto;
+            padding: 10px;
+        }
+
+        #control-panel h2 {
+            margin-top: 0;
+            color: #00ff00;
+        }
+
+        .divider {
+            position: absolute;
+            bottom: 60px;
+            width: 100%;
+            height: 2px;
+            background-color: #00ff00;
+        }
+
+        #widgets {
+            position: absolute;
+            top: 50px;
+            right: 10px;
+            width: 200px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: #00ff00;
+            border-radius: 5px;
+            padding: 10px;
+            box-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <audio id="startup-sound" src="myedit_ai_sfx_0725130755.mp3" preload="auto"></audio>
+
+    <div id="start-button"></div>
+    <div class="divider"></div>
+
+    <div id="start-menu">
+        <ul>
+            <li onclick="showWindow('browser')">ブラウザ</li>
+            <li onclick="showWindow('paint')">Paint</li>
+            <li onclick="showWindow('migdal')">Migdal</li>
+            <li onclick="showWindow('calc')">Calc</li>
+            <li onclick="showWindow('notepad')">Notepad</li>
+            <li onclick="showWindow('dictionary')">Dictionary</li>
+            <li onclick="showWindow('memory-monitor')">メモリモニタリング</li>
+            <li onclick="showWindow('timer')">タイマー</li>
+            <li onclick="showWindow('weather')">天気予報</li>
+            <li onclick="showControlPanel()">コントロールパネル</li>
+        </ul>
+    </div>
+
+    <div id="control-panel">
+        <h2>コントロールパネル</h2>
+        <label for="background-color">背景色:</label>
+        <input type="color" id="background-color" value="#000000">
+        
+        <label for="text-color">テキスト色:</label>
+        <input type="color" id="text-color" value="#00ff00">
+        
+        <label for="brightness">明るさ:</label>
+        <input type="range" id="brightness" min="0" max="100" value="100">
+        
+        <label for="language">言語:</label>
+        <select id="language">
+            <option value="ja">日本語</option>
+            <option value="en">English</option>
+            <option value="vi">Tiếng Việt</option>
+        </select>
+        
+        <button onclick="applyChanges()">変更を適用</button>
+    </div>
+
+    <div id="widgets">
+        <h3>ウィジェット</h3>
+        <!-- ここにウィジェットを追加 -->
+    </div>
+
+    <div class="window" id="browser">
+        <div class="title-bar" onmousedown="startDrag(event, 'browser')">
+            <span class="title">ブラウザ</span>
+            <div class="window-controls">
+                <button class="minimize" onclick="minimizeWindow('browser')">_</button>
+                <button class="maximize" onclick="maximizeWindow('browser')">[]</button>
+                <button class="close" onclick="closeWindow('browser')">X</button>
+            </div>
+        </div>
+        <iframe src="https://amuhiku.netlify.app" frameborder="0" style="width:100%;height:calc(100% - 30px);"></iframe>
+    </div>
+
+    <div class="window" id="paint">
+        <div class="title-bar" onmousedown="startDrag(event, 'paint')">
+            <span class="title">Paint</span>
+            <div class="window-controls">
+                <button class="minimize" onclick="minimizeWindow('paint')">_</button>
+                <button class="maximize" onclick="maximizeWindow('paint')">[]</button>
+                <button class="close" onclick="closeWindow('paint')">X</button>
+            </div>
+        </div>
+        <iframe src="https://sakalt.github.io/paint" frameborder="0" style="width:100%;height:calc(100% - 30px);"></iframe>
+    </div>
+
+    <div class="window" id="migdal">
+        <div class="title-bar" onmousedown="startDrag(event, 'migdal')">
+            <span class="title">Migdal</span>
+            <div class="window-controls">
+                <button class="minimize" onclick="minimizeWindow('migdal')">_</button>
+                <button class="maximize" onclick="maximizeWindow('migdal')">[]</button>
+                <button class="close" onclick="closeWindow('migdal')">X</button>
+            </div>
+        </div>
+        <iframe src="https://migdal.jp" frameborder="0" style="width:100%;height:calc(100% - 30px);"></iframe>
+    </div>
+
+    <div class="window" id="memory-monitor">
+        <div class="title-bar" onmousedown="startDrag(event, 'memory-monitor')">
+            <span class="title">メモリモニタリング</span>
+            <div class="window-controls">
+                <button class="minimize" onclick="minimizeWindow('memory-monitor')">_</button>
+                <button class="maximize" onclick="maximizeWindow('memory-monitor')">[]</button>
+                <button class="close" onclick="closeWindow('memory-monitor')">X</button>
+            </div>
+        </div>
+        <div style="padding: 10px;">
+            <p>使用中のメモリ: <span id="memory-usage"></span>%</p>
+        </div>
+    </div>
+
+    <div class="window" id="timer">
+        <div class="title-bar" onmousedown="startDrag(event, 'timer')">
+            <span class="title">タイマー</span>
+            <div class="window-controls">
+                <button class="minimize" onclick="minimizeWindow('timer')">_</button>
+                <button class="maximize" onclick="maximizeWindow('timer')">[]</button>
+                <button class="close" onclick="closeWindow('timer')">X</button>
+            </div>
+        </div>
+        <div style="padding: 10px;">
+            <p>タイマー:</p>
+            <input type="number" id="timer-minutes" placeholder="分" min="0">
+            <input type="number" id="timer-seconds" placeholder="秒" min="0">
+            <button onclick="startTimer()">スタート</button>
+            <button onclick="stopTimer()">ストップ</button>
+            <p>残り時間: <span id="timer-display">00:00</span></p>
+        </div>
+    </div>
+
+    <div class="window" id="weather">
+        <div class="title-bar" onmousedown="startDrag(event, 'weather')">
+            <span class="title">天気予報</span>
+            <div class="window-controls">
+                <button class="minimize" onclick="minimizeWindow('weather')">_</button>
+                <button class="maximize" onclick="maximizeWindow('weather')">[]</button>
+                <button class="close" onclick="closeWindow('weather')">X</button>
+            </div>
+        </div>
+        <div style="padding: 10px;">
+            <p>現在の天気: <span id="weather-info">不明</span></p>
+        </div>
+    </div>
+
+    <div id="window-list"></div>
+
+    <script>
+        document.getElementById('start-button').addEventListener('click', function() {
+            var startMenu = document.getElementById('start-menu');
+            startMenu.style.display = startMenu.style.display === 'none' ? 'block' : 'none';
+        });
+
+        function showWindow(windowId) {
+            var windows = document.querySelectorAll('.window');
+            windows.forEach(function(win) {
+                win.style.display = 'none';
+            });
+
+            var selectedWindow = document.getElementById(windowId);
+            selectedWindow.style.display = 'block';
+            addToWindowList(windowId);
+        }
+
+        function minimizeWindow(windowId) {
+            var window = document.getElementById(windowId);
+            window.style.display = 'none';
+        }
+
+        function maximizeWindow(windowId) {
+            var window = document.getElementById(windowId);
+            window.style.width = '100%';
+            window.style.height = '100%';
+            window.style.top = '0';
+            window.style.left = '0';
+        }
+
+        function closeWindow(windowId) {
+            var window = document.getElementById(windowId);
+            window.style.display = 'none';
+            removeFromWindowList(windowId);
+        }
+
+        function startDrag(event, windowId) {
+            var window = document.getElementById(windowId);
+            var shiftX = event.clientX - window.getBoundingClientRect().left;
+            var shiftY = event.clientY - window.getBoundingClientRect().top;
+
+            function moveAt(pageX, pageY) {
+                window.style.left = pageX - shiftX + 'px';
+                window.style.top = pageY - shiftY + 'px';
+            }
+
+            function onMouseMove(event) {
+                moveAt(event.pageX, event.pageY);
+            }
+
+            document.addEventListener('mousemove', onMouseMove);
+
+            window.onmouseup = function() {
+                document.removeEventListener('mousemove', onMouseMove);
+                window.onmouseup = null;
+            };
+        }
+
+        function addToWindowList(windowId) {
+            var windowList = document.getElementById('window-list');
+            var listItem = document.createElement('div');
+            listItem.className = 'window-list-item';
+            listItem.textContent = document.querySelector('#' + windowId + ' .title-bar .title').textContent;
+            listItem.dataset.windowId = windowId;
+            listItem.onclick = function() {
+                showWindow(windowId);
+            };
+            windowList.appendChild(listItem);
+        }
+
+        function removeFromWindowList(windowId) {
+            var windowList = document.getElementById('window-list');
+            var items = windowList.querySelectorAll('.window-list-item');
+            items.forEach(function(item) {
+                if (item.dataset.windowId === windowId) {
+                    windowList.removeChild(item);
+                }
+            });
+        }
+
+        function applyChanges() {
+            var backgroundColor = document.getElementById('background-color').value;
+            var textColor = document.getElementById('text-color').value;
+            var brightness = document.getElementById('brightness').value;
+            var language = document.getElementById('language').value;
+
+            document.body.style.backgroundColor = backgroundColor;
+            document.body.style.color = textColor;
+            document.body.style.filter = `brightness(${brightness}%)`;
+
+            if (language === 'ja') {
+                // 日本語設定
+                document.title = 'Windows Lux';
+                document.getElementById('control-panel').querySelector('h2').textContent = 'コントロールパネル';
+                document.getElementById('start-menu').querySelectorAll('li')[0].textContent = 'ブラウザ';
+                document.getElementById('start-menu').querySelectorAll('li')[1].textContent = 'Paint';
+                document.getElementById('start-menu').querySelectorAll('li')[2].textContent = 'Migdal';
+                document.getElementById('start-menu').querySelectorAll('li')[3].textContent = 'Calc';
+                document.getElementById('start-menu').querySelectorAll('li')[4].textContent = 'Notepad';
+                document.getElementById('start-menu').querySelectorAll('li')[5].textContent = 'Dictionary';
+                document.getElementById('start-menu').querySelectorAll('li')[6].textContent = 'メモリモニタリング';
+                document.getElementById('start-menu').querySelectorAll('li')[7].textContent = 'タイマー';
+                document.getElementById('start-menu').querySelectorAll('li')[8].textContent = '天気予報';
+                document.getElementById('start-menu').querySelectorAll('li')[9].textContent = 'コントロールパネル';
+            } else if (language === 'en') {
+                // 英語設定
+                document.title = 'Windows Lux';
+                document.getElementById('control-panel').querySelector('h2').textContent = 'Control Panel';
+                document.getElementById('start-menu').querySelectorAll('li')[0].textContent = 'Browser';
+                document.getElementById('start-menu').querySelectorAll('li')[1].textContent = 'Paint';
+                document.getElementById('start-menu').querySelectorAll('li')[2].textContent = 'Migdal';
+                document.getElementById('start-menu').querySelectorAll('li')[3].textContent = 'Calc';
+                document.getElementById('start-menu').querySelectorAll('li')[4].textContent = 'Notepad';
+                document.getElementById('start-menu').querySelectorAll('li')[5].textContent = 'Dictionary';
+                document.getElementById('start-menu').querySelectorAll('li')[6].textContent = 'Memory Monitoring';
+                document.getElementById('start-menu').querySelectorAll('li')[7].textContent = 'Timer';
+                document.getElementById('start-menu').querySelectorAll('li')[8].textContent = 'Weather';
+                document.getElementById('start-menu').querySelectorAll('li')[9].textContent = 'Control Panel';
+            } else if (language === 'vi') {
+                // ベトナム語設定
+                document.title = 'Windows Lux';
+                document.getElementById('control-panel').querySelector('h2').textContent = 'Bảng điều khiển';
+                document.getElementById('start-menu').querySelectorAll('li')[0].textContent = 'Trình duyệt';
+                document.getElementById('start-menu').querySelectorAll('li')[1].textContent = 'Paint';
+                document.getElementById('start-menu').querySelectorAll('li')[2].textContent = 'Migdal';
+                document.getElementById('start-menu').querySelectorAll('li')[3].textContent = 'Calc';
+                document.getElementById('start-menu').querySelectorAll('li')[4].textContent = 'Notepad';
+                document.getElementById('start-menu').querySelectorAll('li')[5].textContent = 'Từ điển';
+                document.getElementById('start-menu').querySelectorAll('li')[6].textContent = 'Giám sát bộ nhớ';
+                document.getElementById('start-menu').querySelectorAll('li')[7].textContent = 'Hẹn giờ';
+                document.getElementById('start-menu').querySelectorAll('li')[8].textContent = 'Dự báo thời tiết';
+                document.getElementById('start-menu').querySelectorAll('li')[9].textContent = 'Bảng điều khiển';
+            }
+        }
+
+        function startTimer() {
+            var minutes = parseInt(document.getElementById('timer-minutes').value) || 0;
+            var seconds = parseInt(document.getElementById('timer-seconds').value) || 0;
+            var totalSeconds = minutes * 60 + seconds;
+
+            var timerDisplay = document.getElementById('timer-display');
+            timerDisplay.textContent = formatTime(totalSeconds);
+
+            var timerInterval = setInterval(function() {
+                if (totalSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    timerDisplay.textContent = '00:00';
+                    alert('タイマーが終了しました');
+                } else {
+                    totalSeconds--;
+                    timerDisplay.textContent = formatTime(totalSeconds);
+                }
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+        }
+
+        function formatTime(seconds) {
+            var minutes = Math.floor(seconds / 60);
+            var seconds = seconds % 60;
+            return (minutes < 10 ? '0' : '') + minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+        }
+
+        function updateMemoryUsage() {
+            var memoryUsage = Math.floor(Math.random() * 100);
+            document.getElementById('memory-usage').textContent = memoryUsage;
+        }
+
+        setInterval(updateMemoryUsage, 1000);
+
+        function fetchWeather() {
+            // ここで天気APIを使用して天気情報を取得します
+            var weatherInfo = '晴れ';  // 仮の天気情報
+            document.getElementById('weather-info').textContent = weatherInfo;
+        }
+
+        fetchWeather();
+    </script>
+</body>
+</html>
