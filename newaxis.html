@@ -26,16 +26,18 @@
             color: white;
             text-align: center;
             z-index: 1000; /* 最前面 */
+            transition: opacity 0.3s ease;
         }
 
-        .hidden {
-            display: none;
+        #lock-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
         }
 
         #taskbar {
             position: absolute;
             bottom: 0;
-            width: 600px; /* 幅を600pxに制限 */
+            width: 100%;
             height: 40px;
             background-color: black;
             color: white;
@@ -43,8 +45,6 @@
             justify-content: space-between;
             align-items: center;
             padding: 0 10px;
-            left: 50%;
-            transform: translateX(-50%);
             z-index: 100; /* スタートメニューの下 */
         }
 
@@ -74,7 +74,7 @@
         #start-menu {
             position: absolute;
             left: 50%;
-            bottom: 50px; /* タスクバーの上に表示 */
+            bottom: 40px; /* タスクバーの上に表示 */
             transform: translateX(-50%);
             width: 250px;
             background-color: black;
@@ -164,8 +164,8 @@
 </head>
 <body>
     <div id="lock-screen">
-        <h1>ようこそ。クリックで解除（タッチ対応）</h1>
-        <button id="unlock-btn">解除</button>
+        <h1>ようこそ。スワイプで解除（タッチ対応）</h1>
+        <div id="unlock-msg">スワイプして解除</div>
     </div>
     <div id="desktop" class="hidden">
         <div id="taskbar">
@@ -221,14 +221,14 @@
         </div>
         <div class="window" id="calc">
             <div class="title-bar">
-                <span class="title">Calculator</span>
+                <span class="title">Calc</span>
                 <div class="window-controls">
                     <button class="minimize">_</button>
                     <button class="maximize">[]</button>
                     <button class="close">X</button>
                 </div>
             </div>
-            <iframe src="https://www.google.com/search?q=calculator" frameborder="0"></iframe>
+            <iframe src="data:text/html,<h1>Calc</h1>" frameborder="0"></iframe>
         </div>
         <div class="window" id="notepad">
             <div class="title-bar">
@@ -239,7 +239,7 @@
                     <button class="close">X</button>
                 </div>
             </div>
-            <iframe src="data:text/html,<h1>Notepad</h1>" frameborder="0"></iframe>
+            <iframe src="data:text/html,<textarea style='width:100%;height:100%;'></textarea>" frameborder="0"></iframe>
         </div>
         <div class="window" id="cmd">
             <div class="title-bar">
@@ -253,7 +253,7 @@
             <iframe src="data:text/html,<h1>Command Prompt</h1>" frameborder="0"></iframe>
         </div>
     </div>
-    <audio id="startup-sound" src="myedit_ai_sfx_0725130755.mp3"></audio>
+    <audio id="startup-sound" src="myedit_ai_sfx_0725130755.mp3" preload="auto"></audio>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // スタートボタンのクリックでスタートメニューの表示・非表示を切り替え
@@ -278,75 +278,27 @@
             });
 
             // 解除ボタンがクリックされたとき
-            document.getElementById('unlock-btn').addEventListener('click', function() {
+            document.getElementById('unlock-msg').addEventListener('click', function() {
                 document.getElementById('lock-screen').classList.add('hidden');
                 document.getElementById('desktop').classList.remove('hidden');
                 document.getElementById('startup-sound').play();
             });
 
-            // ウィンドウをドラッグ可能にする
-            document.querySelectorAll('.window').forEach(function(window) {
-                let titleBar = window.querySelector('.title-bar');
-                titleBar.onmousedown = function(e) {
-                    let offsetX = e.clientX - window.getBoundingClientRect().left;
-                    let offsetY = e.clientY - window.getBoundingClientRect().top;
+            // スワイプで解除機能
+            let touchstartX = 0;
+            let touchendX = 0;
 
-                    function onMouseMove(e) {
-                        window.style.left = (e.clientX - offsetX) + 'px';
-                        window.style.top = (e.clientY - offsetY) + 'px';
-                    }
-
-                    function onMouseUp() {
-                        document.removeEventListener('mousemove', onMouseMove);
-                        document.removeEventListener('mouseup', onMouseUp);
-                    }
-
-                    document.addEventListener('mousemove', onMouseMove);
-                    document.addEventListener('mouseup', onMouseUp);
-                };
+            document.getElementById('lock-screen').addEventListener('touchstart', function(e) {
+                touchstartX = e.changedTouches[0].screenX;
             });
 
-            // ウィンドウの最小化、最大化、閉じる機能
-            document.querySelectorAll('.minimize').forEach(function(button) {
-                button.addEventListener('click', function() {
-                    var window = this.closest('.window');
-                    window.style.display = 'none';
-                });
-            });
-
-            document.querySelectorAll('.maximize').forEach(function(button) {
-                button.addEventListener('click', function() {
-                    var window = this.closest('.window');
-                    if (window.style.width === '100%' && window.style.height === '100%') {
-                        window.style.width = '300px';
-                        window.style.height = '200px';
-                    } else {
-                        window.style.width = '100%';
-                        window.style.height = '100%';
-                    }
-                });
-            });
-
-            document.querySelectorAll('.close').forEach(function(button) {
-                button.addEventListener('click', function() {
-                    var window = this.closest('.window');
-                    window.style.display = 'none';
-                });
-            });
-
-            // 言語切替ボタンの機能
-            document.getElementById('lang-toggle').addEventListener('click', function() {
-                alert('言語切替機能はまだ実装されていません。');
-            });
-
-            // バージョン情報ボタンの機能
-            document.getElementById('version-info').addEventListener('click', function() {
-                alert('Windows Newaxis バージョン 1.0');
-            });
-
-            // YouTubeボタンの機能
-            document.getElementById('youtube-btn').addEventListener('click', function() {
-                window.open('https://www.youtube.com', '_blank');
+            document.getElementById('lock-screen').addEventListener('touchend', function(e) {
+                touchendX = e.changedTouches[0].screenX;
+                if (touchendX - touchstartX > 100) { // スワイプ距離の閾値
+                    document.getElementById('lock-screen').classList.add('hidden');
+                    document.getElementById('desktop').classList.remove('hidden');
+                    document.getElementById('startup-sound').play();
+                }
             });
         });
     </script>
