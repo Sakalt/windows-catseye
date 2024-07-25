@@ -25,6 +25,7 @@
             background-color: rgba(0, 0, 0, 0.7);
             color: white;
             text-align: center;
+            z-index: 1000; /* 最前面 */
         }
 
         .hidden {
@@ -42,24 +43,10 @@
             justify-content: space-between;
             align-items: center;
             padding: 0 10px;
+            z-index: 100; /* スタートメニューの下 */
         }
 
-        #taskbar #start-menu {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 450px;
-            height: 100px;
-            background-color: black;
-            border: 2px solid white;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-        }
-
-        #taskbar #start-btn {
+        #start-btn {
             cursor: pointer;
             background-image: url('majaurstart.png');
             width: 40px;
@@ -68,7 +55,7 @@
             position: relative;
         }
 
-        #taskbar #start-btn::before {
+        #start-btn::before {
             content: '';
             position: absolute;
             top: 50%;
@@ -82,6 +69,36 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
         }
 
+        #start-menu {
+            position: absolute;
+            left: 50%;
+            bottom: 40px; /* タスクバーの上に表示 */
+            transform: translateX(-50%);
+            width: 250px;
+            background-color: black;
+            border: 2px solid white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            display: none; /* 初期状態では非表示 */
+            z-index: 500; /* ウィンドウの上 */
+        }
+
+        #start-menu ul {
+            list-style: none;
+            padding: 10px;
+            margin: 0;
+        }
+
+        #start-menu ul li {
+            padding: 10px;
+            color: white;
+            cursor: pointer;
+        }
+
+        #start-menu ul li:hover {
+            background-color: #333;
+        }
+
         .window {
             position: absolute;
             width: 300px;
@@ -93,6 +110,7 @@
             overflow: auto;
             border-radius: 10px;
             backdrop-filter: blur(10px);
+            z-index: 200; /* スタートメニューの下 */
         }
 
         .title-bar {
@@ -118,19 +136,18 @@
             border-radius: 5px;
             margin: 0 2px;
             cursor: pointer;
-            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
             transition: background 0.3s ease;
         }
 
-        .window-controls .minimize {
+        .minimize {
             background: linear-gradient(145deg, #10a500, #80b87a);
         }
 
-        .window-controls .maximize {
+        .maximize {
             background: linear-gradient(145deg, #eace2a, #fff3ac);
         }
 
-        .window-controls .close {
+        .close {
             background: linear-gradient(145deg, #ff3300, #ffbcac);
         }
 
@@ -141,24 +158,6 @@
         .window-controls button:active {
             opacity: 0.6;
         }
-
-        iframe {
-            width: 100%;
-            height: calc(100% - 30px);
-            border: none;
-        }
-
-        #lang-toggle, #version-info, #youtube-btn {
-            background: none;
-            border: none;
-            color: white;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        #lang-toggle:hover, #version-info:hover, #youtube-btn:hover {
-            text-decoration: underline;
-        }
     </style>
 </head>
 <body>
@@ -168,8 +167,16 @@
     </div>
     <div id="desktop" class="hidden">
         <div id="taskbar">
+            <div id="start-btn"></div>
             <div id="start-menu">
-                <div id="start-btn"></div>
+                <ul>
+                    <li data-target="browser">Bing</li>
+                    <li data-target="paint">Paint</li>
+                    <li data-target="migdal">Migdal</li>
+                    <li data-target="calc">Calc</li>
+                    <li data-target="notepad">Notepad</li>
+                    <li data-target="cmd">Command Prompt</li>
+                </ul>
             </div>
             <div id="taskbar-items">
                 <button id="lang-toggle">日本語</button>
@@ -252,79 +259,46 @@
             document.getElementById('startup-sound').play();
         });
 
-        const windows = document.querySelectorAll('.window');
-        windows.forEach(win => {
-            const titleBar = win.querySelector('.title-bar');
-            const controls = win.querySelector('.window-controls');
-            const minimize = controls.querySelector('.minimize');
-            const maximize = controls.querySelector('.maximize');
-            const close = controls.querySelector('.close');
-
-            titleBar.onmousedown = function(event) {
-                let shiftX = event.clientX - win.getBoundingClientRect().left;
-                let shiftY = event.clientY - win.getBoundingClientRect().top;
-
-                function moveAt(pageX, pageY) {
-                    win.style.left = pageX - shiftX + 'px';
-                    win.style.top = pageY - shiftY + 'px';
-                }
-
-                moveAt(event.pageX, event.pageY);
-
-                function onMouseMove(event) {
-                    moveAt(event.pageX, event.pageY);
-                }
-
-                document.addEventListener('mousemove', onMouseMove);
-
-                titleBar.onmouseup = function() {
-                    document.removeEventListener('mousemove', onMouseMove);
-                    titleBar.onmouseup = null;
-                };
-            };
-
-            minimize.onclick = function() {
-                win.style.height = '30px';
-                win.querySelector('iframe').style.display = 'none';
-            };
-
-            maximize.onclick = function() {
-                win.style.width = '100%';
-                win.style.height = '100%';
-                win.querySelector('iframe').style.height = 'calc(100% - 30px)';
-            };
-
-            close.onclick = function() {
-                win.style.display = 'none';
-            };
+        document.getElementById('start-btn').addEventListener('click', function() {
+            var menu = document.getElementById('start-menu');
+            if (menu.style.display === 'none' || menu.style.display === '') {
+                menu.style.display = 'block';
+            } else {
+                menu.style.display = 'none';
+            }
         });
 
-        // タッチ対応のドラッグ機能
-        document.addEventListener('touchstart', function(event) {
-            const touch = event.touches[0];
-            const target = touch.target.closest('.title-bar');
-            if (target) {
-                let shiftX = touch.clientX - target.closest('.window').getBoundingClientRect().left;
-                let shiftY = touch.clientY - target.closest('.window').getBoundingClientRect().top;
+        document.querySelectorAll('#start-menu ul li').forEach(function(item) {
+            item.addEventListener('click', function() {
+                var targetId = item.getAttribute('data-target');
+                document.querySelectorAll('.window').forEach(function(win) {
+                    win.style.display = 'none';
+                });
+                document.getElementById(targetId).style.display = 'block';
+                document.getElementById('start-menu').style.display = 'none';
+            });
+        });
 
-                function moveAt(pageX, pageY) {
-                    target.closest('.window').style.left = pageX - shiftX + 'px';
-                    target.closest('.window').style.top = pageY - shiftY + 'px';
-                }
+        document.querySelectorAll('.window-controls .minimize').forEach(function(button) {
+            button.addEventListener('click', function() {
+                this.parentElement.parentElement.parentElement.style.display = 'none';
+            });
+        });
 
-                moveAt(touch.pageX, touch.pageY);
+        document.querySelectorAll('.window-controls .maximize').forEach(function(button) {
+            button.addEventListener('click', function() {
+                var window = this.parentElement.parentElement.parentElement;
+                window.style.width = '100%';
+                window.style.height = '100%';
+                window.style.top = '0';
+                window.style.left = '0';
+            });
+        });
 
-                function onTouchMove(event) {
-                    const touch = event.touches[0];
-                    moveAt(touch.pageX, touch.pageY);
-                }
-
-                document.addEventListener('touchmove', onTouchMove);
-
-                document.addEventListener('touchend', function() {
-                    document.removeEventListener('touchmove', onTouchMove);
-                }, { once: true });
-            }
+        document.querySelectorAll('.window-controls .close').forEach(function(button) {
+            button.addEventListener('click', function() {
+                this.parentElement.parentElement.parentElement.style.display = 'none';
+            });
         });
     </script>
 </body>
