@@ -35,23 +35,24 @@
         #taskbar {
             position: absolute;
             bottom: 0;
-            width: 100%;
-            height: 60px; /* 高さを変更 */
-            background-color: rgba(0, 0, 0, 0.8); /* 半透明 */
+            width: 600px; /* 幅を600pxに制限 */
+            height: 40px;
+            background-color: black;
             color: white;
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 0 10px;
-            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.5); /* シャドウ */
+            left: 50%;
+            transform: translateX(-50%);
             z-index: 100; /* スタートメニューの下 */
         }
 
         #start-btn {
             cursor: pointer;
             background-image: url('majaurstart.png');
-            width: 60px; /* サイズを変更 */
-            height: 60px;
+            width: 40px;
+            height: 40px;
             background-size: cover;
             position: relative;
         }
@@ -61,64 +62,63 @@
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 80px; /* サイズを変更 */
-            height: 80px;
+            width: 60px;
+            height: 60px;
             background-color: black;
             border: 2px solid white;
             transform: translate(-50%, -50%) rotate(45deg);
-            border-radius: 15px; /* 角を丸める */
+            border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
         }
 
         #start-menu {
             position: absolute;
             left: 50%;
-            bottom: 60px; /* タスクバーの上に表示 */
+            bottom: 50px; /* タスクバーの上に表示 */
             transform: translateX(-50%);
-            width: 300px; /* サイズを変更 */
-            background-color: rgba(0, 0, 0, 0.9); /* 半透明 */
+            width: 250px;
+            background-color: black;
             border: 2px solid white;
-            border-radius: 15px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
             display: none; /* 初期状態では非表示 */
             z-index: 500; /* ウィンドウの上 */
         }
 
         #start-menu ul {
             list-style: none;
-            padding: 15px; /* パディングを変更 */
+            padding: 10px;
             margin: 0;
         }
 
         #start-menu ul li {
-            padding: 15px; /* パディングを変更 */
+            padding: 10px;
             color: white;
             cursor: pointer;
-            transition: background 0.3s ease;
         }
 
         #start-menu ul li:hover {
-            background-color: #444; /* ホバー時の色変更 */
+            background-color: #333;
         }
 
         .window {
             position: absolute;
-            width: 400px; /* サイズを変更 */
-            height: 300px; /* サイズを変更 */
-            background: rgba(255, 255, 255, 0.95);
+            width: 300px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.9);
             border: 1px solid #ccc;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
             resize: both;
             overflow: auto;
-            border-radius: 15px;
-            backdrop-filter: blur(12px); /* ブラー効果 */
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
             z-index: 200; /* スタートメニューの下 */
         }
 
         .title-bar {
-            background: #222;
+            background: #333;
             color: white;
-            padding: 10px; /* パディングを変更 */
+            padding: 5px;
             cursor: move;
             display: flex;
             justify-content: space-between;
@@ -132,25 +132,25 @@
         .window-controls button {
             border: none;
             color: white;
-            font-size: 16px; /* フォントサイズを変更 */
-            width: 35px; /* サイズを変更 */
-            height: 35px; /* サイズを変更 */
-            border-radius: 8px; /* 角を丸める */
-            margin: 0 3px; /* マージンを変更 */
+            font-size: 14px;
+            width: 30px;
+            height: 30px;
+            border-radius: 5px;
+            margin: 0 2px;
             cursor: pointer;
             transition: background 0.3s ease;
         }
 
         .minimize {
-            background: linear-gradient(145deg, #1e8e1e, #9fbd9f);
+            background: linear-gradient(145deg, #10a500, #80b87a);
         }
 
         .maximize {
-            background: linear-gradient(145deg, #f9c107, #fef3a0);
+            background: linear-gradient(145deg, #eace2a, #fff3ac);
         }
 
         .close {
-            background: linear-gradient(145deg, #e74c3c, #f8b7b3);
+            background: linear-gradient(145deg, #ff3300, #ffbcac);
         }
 
         .window-controls button:hover {
@@ -159,43 +159,6 @@
 
         .window-controls button:active {
             opacity: 0.6;
-        }
-
-        #taskbar-items {
-            display: flex;
-            gap: 10px; /* アイテム間のスペース */
-        }
-
-        #taskbar-items button {
-            background-color: #333;
-            border: none;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-
-        #taskbar-items button:hover {
-            background-color: #555;
-        }
-
-        .iframe-wrapper {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
-        /* 時計のスタイル */
-        #clock {
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 10px;
-            border-radius: 10px;
-            margin: 10px;
         }
     </style>
 </head>
@@ -232,7 +195,7 @@
                     <button class="close">X</button>
                 </div>
             </div>
-            <iframe src="https://www.bing.com" class="iframe-wrapper"></iframe>
+            <iframe src="https://www.bing.com" frameborder="0"></iframe>
         </div>
         <div class="window" id="paint">
             <div class="title-bar">
@@ -243,7 +206,7 @@
                     <button class="close">X</button>
                 </div>
             </div>
-            <iframe src="https://sakalt.github.io/paint" class="iframe-wrapper"></iframe>
+            <iframe src="https://sakalt.github.io/paint" frameborder="0"></iframe>
         </div>
         <div class="window" id="migdal">
             <div class="title-bar">
@@ -254,7 +217,7 @@
                     <button class="close">X</button>
                 </div>
             </div>
-            <iframe src="https://migdal.jp" class="iframe-wrapper"></iframe>
+            <iframe src="https://migdal.jp" frameborder="0"></iframe>
         </div>
         <div class="window" id="calc">
             <div class="title-bar">
@@ -265,7 +228,7 @@
                     <button class="close">X</button>
                 </div>
             </div>
-            <iframe src="calc.html" class="iframe-wrapper"></iframe>
+            <iframe src="data:text/html,<h1>Calc</h1>" frameborder="0"></iframe>
         </div>
         <div class="window" id="notepad">
             <div class="title-bar">
@@ -276,7 +239,7 @@
                     <button class="close">X</button>
                 </div>
             </div>
-            <iframe src="notepad-karikyok.html" class="iframe-wrapper"></iframe>
+            <iframe src="data:text/html,<textarea style='width:100%;height:100%;'></textarea>" frameborder="0"></iframe>
         </div>
         <div class="window" id="cmd">
             <div class="title-bar">
@@ -287,57 +250,103 @@
                     <button class="close">X</button>
                 </div>
             </div>
-            <iframe src="cmd.html" class="iframe-wrapper"></iframe>
+            <iframe src="data:text/html,<h1>Command Prompt</h1>" frameborder="0"></iframe>
         </div>
-        <div id="clock"></div>
     </div>
+    <audio id="startup-sound" src="myedit_ai_sfx_0725130732.mp3"></audio>
+
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const unlockBtn = document.getElementById('unlock-btn');
-            const lockScreen = document.getElementById('lock-screen');
-            const desktop = document.getElementById('desktop');
-            const startBtn = document.getElementById('start-btn');
-            const startMenu = document.getElementById('start-menu');
-            const windows = document.querySelectorAll('.window');
-            const langToggle = document.getElementById('lang-toggle');
-            const versionInfo = document.getElementById('version-info');
-
-            unlockBtn.addEventListener('click', () => {
-                lockScreen.classList.add('hidden');
-                desktop.classList.remove('hidden');
-            });
-
-            startBtn.addEventListener('click', () => {
-                startMenu.style.display = startMenu.style.display === 'none' ? 'block' : 'none';
-            });
-
-            document.querySelectorAll('#start-menu ul li').forEach(item => {
-                item.addEventListener('click', () => {
-                    const targetId = item.getAttribute('data-target');
-                    windows.forEach(win => win.style.display = 'none');
-                    document.getElementById(targetId).style.display = 'block';
-                    startMenu.style.display = 'none';
-                });
-            });
-
-            langToggle.addEventListener('click', () => {
-                const isJapanese = langToggle.textContent === '日本語';
-                langToggle.textContent = isJapanese ? 'Future English' : '日本語';
-                document.querySelectorAll('.title').forEach(title => {
-                    title.textContent = isJapanese ? 'アプリ' : 'App';
-                });
-            });
-
-            versionInfo.addEventListener('click', () => {
-                alert('Windows Newaxis バージョン 1.0');
-            });
-
-            function updateClock() {
-                const now = new Date();
-                document.getElementById('clock').textContent = now.toLocaleTimeString();
+        // スタートボタンのクリックでスタートメニューの表示・非表示を切り替え
+        document.getElementById('start-btn').addEventListener('click', function() {
+            var menu = document.getElementById('start-menu');
+            if (menu.style.display === 'none' || menu.style.display === '') {
+                menu.style.display = 'block';
+            } else {
+                menu.style.display = 'none';
             }
+        });
 
-            setInterval(updateClock, 1000);
+        // スタートメニューの項目をクリックすると対応するウィンドウを表示
+        document.querySelectorAll('#start-menu ul li').forEach(function(item) {
+            item.addEventListener('click', function() {
+                var targetId = item.getAttribute('data-target');
+                var targetWindow = document.getElementById(targetId);
+                if (targetWindow) {
+                    targetWindow.style.display = 'block';
+                }
+            });
+        });
+
+        // 解除ボタンがクリックされたとき
+        document.getElementById('unlock-btn').addEventListener('click', function() {
+            document.getElementById('lock-screen').classList.add('hidden');
+            document.getElementById('desktop').classList.remove('hidden');
+            document.getElementById('startup-sound').play();
+        });
+
+        // ウィンドウをドラッグ可能にする
+        document.querySelectorAll('.window').forEach(function(window) {
+            let titleBar = window.querySelector('.title-bar');
+            titleBar.onmousedown = function(e) {
+                let offsetX = e.clientX - window.getBoundingClientRect().left;
+                let offsetY = e.clientY - window.getBoundingClientRect().top;
+
+                function onMouseMove(e) {
+                    window.style.left = (e.clientX - offsetX) + 'px';
+                    window.style.top = (e.clientY - offsetY) + 'px';
+                }
+
+                function onMouseUp() {
+                    document.removeEventListener('mousemove', onMouseMove);
+                    document.removeEventListener('mouseup', onMouseUp);
+                }
+
+                document.addEventListener('mousemove', onMouseMove);
+                document.addEventListener('mouseup', onMouseUp);
+            };
+        });
+
+        // ウィンドウの最小化、最大化、閉じる機能
+        document.querySelectorAll('.minimize').forEach(function(button) {
+            button.addEventListener('click', function() {
+                var window = this.closest('.window');
+                window.style.display = 'none';
+            });
+        });
+
+        document.querySelectorAll('.maximize').forEach(function(button) {
+            button.addEventListener('click', function() {
+                var window = this.closest('.window');
+                if (window.style.width === '100%' && window.style.height === '100%') {
+                    window.style.width = '300px';
+                    window.style.height = '200px';
+                } else {
+                    window.style.width = '100%';
+                    window.style.height = '100%';
+                }
+            });
+        });
+
+        document.querySelectorAll('.close').forEach(function(button) {
+            button.addEventListener('click', function() {
+                var window = this.closest('.window');
+                window.style.display = 'none';
+            });
+        });
+
+        // 言語切替ボタンの機能
+        document.getElementById('lang-toggle').addEventListener('click', function() {
+            alert('言語切替機能はまだ実装されていません。');
+        });
+
+        // バージョン情報ボタンの機能
+        document.getElementById('version-info').addEventListener('click', function() {
+            alert('Windows Newaxis バージョン 1.0');
+        });
+
+        // YouTubeボタンの機能
+        document.getElementById('youtube-btn').addEventListener('click', function() {
+            window.open('https://www.youtube.com', '_blank');
         });
     </script>
 </body>
