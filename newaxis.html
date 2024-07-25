@@ -255,6 +255,11 @@
             document.getElementById('startup-sound').play();
         });
 
+        document.getElementById('start-btn').addEventListener('click', function() {
+            var startMenu = document.getElementById('start-menu');
+            startMenu.style.display = startMenu.style.display === 'block' ? 'none' : 'block';
+        });
+
         function openApp(appId) {
             document.querySelectorAll('.window').forEach(win => win.style.display = 'none');
             document.getElementById(appId).style.display = 'block';
