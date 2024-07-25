@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows Newaxis</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: url('sunset_background.png') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        #lock-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            text-align: center;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #taskbar {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 40px;
+            background-color: black;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 10px;
+        }
+
+        #start-btn {
+            cursor: pointer;
+        }
+
+        .window {
+            position: absolute;
+            width: 300px;
+            height: 200px;
+            background: white;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            resize: both;
+            overflow: auto;
+            border-radius: 10px;
+        }
+
+        .title-bar {
+            background: #333;
+            color: white;
+            padding: 5px;
+            cursor: move;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .window-controls {
+            display: flex;
+        }
+
+        .window-controls button {
+            background: linear-gradient(145deg, #ddd, #ccc);
+            border: none;
+            color: #333;
+            font-size: 14px;
+            width: 30px;
+            height: 30px;
+            border-radius: 5px;
+            margin: 0 2px;
+            cursor: pointer;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+            transition: background 0.3s ease;
+        }
+
+        .window-controls button:hover {
+            background: linear-gradient(145deg, #ccc, #ddd);
+        }
+
+        .window-controls button:active {
+            background: linear-gradient(145deg, #bbb, #ddd);
+        }
+
+        iframe {
+            width: 100%;
+            height: calc(100% - 30px);
+            border: none;
+        }
+
+        #lang-toggle, #version-info, #youtube-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        #lang-toggle:hover, #version-info:hover, #youtube-btn:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div id="lock-screen">
+        <h1>ようこそ。クリックで解除（タッチ対応）</h1>
+        <button id="unlock-btn">解除</button>
+    </div>
+    <div id="desktop" class="hidden">
+        <div id="taskbar">
+            <img src="majaurstart.png" id="start-btn" alt="Start">
+            <div id="taskbar-items">
+                <button id="lang-toggle">日本語</button>
+                <button id="version-info">バージョン情報</button>
+                <button id="youtube-btn">YouTube</button>
+            </div>
+        </div>
+        <div class="window" id="browser">
+            <div class="title-bar">
+                <span class="title">Bing</span>
+                <div class="window-controls">
+                    <button class="minimize">_</button>
+                    <button class="maximize">[]</button>
+                    <button class="close">X</button>
+                </div>
+            </div>
+            <iframe src="https://www.bing.com" frameborder="0"></iframe>
+        </div>
+        <div class="window" id="paint">
+            <div class="title-bar">
+                <span class="title">Paint</span>
+                <div class="window-controls">
+                    <button class="minimize">_</button>
+                    <button class="maximize">[]</button>
+                    <button class="close">X</button>
+                </div>
+            </div>
+            <iframe src="https://sakalt.github.io/paint" frameborder="0"></iframe>
+        </div>
+        <div class="window" id="migdal">
+            <div class="title-bar">
+                <span class="title">Migdal</span>
+                <div class="window-controls">
+                    <button class="minimize">_</button>
+                    <button class="maximize">[]</button>
+                    <button class="close">X</button>
+                </div>
+            </div>
+            <iframe src="https://migdal.jp" frameborder="0"></iframe>
+        </div>
+        <div class="window" id="calc">
+            <div class="title-bar">
+                <span class="title">Calc</span>
+                <div class="window-controls">
+                    <button class="minimize">_</button>
+                    <button class="maximize">[]</button>
+                    <button class="close">X</button>
+                </div>
+            </div>
+            <iframe src="data:text/html,<h1>Calc</h1>" frameborder="0"></iframe>
+        </div>
+        <div class="window" id="notepad">
+            <div class="title-bar">
+                <span class="title">Notepad</span>
+                <div class="window-controls">
+                    <button class="minimize">_</button>
+                    <button class="maximize">[]</button>
+                    <button class="close">X</button>
+                </div>
+            </div>
+            <iframe src="data:text/html,<textarea style='width:100%;height:100%;'></textarea>" frameborder="0"></iframe>
+        </div>
+        <div class="window" id="cmd">
+            <div class="title-bar">
+                <span class="title">Command Prompt</span>
+                <div class="window-controls">
+                    <button class="minimize">_</button>
+                    <button class="maximize">[]</button>
+                    <button class="close">X</button>
+                </div>
+            </div>
+            <iframe src="data:text/html,<h1>Command Prompt</h1>" frameborder="0"></iframe>
+        </div>
+    </div>
+    <audio id="startup-sound" src="myedit_ai_sfx_0725130732.mp3" preload="auto"></audio>
+    <script>
+        document.getElementById('unlock-btn').addEventListener('click', function() {
+            document.getElementById('lock-screen').style.display = 'none';
+            document.getElementById('desktop').classList.remove('hidden');
+            document.getElementById('startup-sound').play();
+        });
+
+        const windows = document.querySelectorAll('.window');
+        windows.forEach(win => {
+            const titleBar = win.querySelector('.title-bar');
+            const controls = win.querySelector('.window-controls');
+            const minimize = controls.querySelector('.minimize');
+            const maximize = controls.querySelector('.maximize');
+            const close = controls.querySelector('.close');
+
+            titleBar.onmousedown = function(event) {
+                let shiftX = event.clientX - win.getBoundingClientRect().left;
+                let shiftY = event.clientY - win.getBoundingClientRect().top;
+
+                function moveAt(pageX, pageY) {
+                    win.style.left = pageX - shiftX + 'px';
+                    win.style.top = pageY - shiftY + 'px';
+                }
+
+                moveAt(event.pageX, event.pageY);
+
+                function onMouseMove(event) {
+                    moveAt(event.pageX, event.pageY);
+                }
+
+                document.addEventListener('mousemove', onMouseMove);
+
+                titleBar.onmouseup = function() {
+                    document.removeEventListener('mousemove', onMouseMove);
+                    titleBar.onmouseup = null;
+                };
+            };
+
+            minimize.onclick = function() {
+                win.style.height = '30px';
+                win.querySelector('iframe').style.display = 'none';
+            };
+
+            maximize.onclick = function() {
+                win.style.width = '100%';
+                win.style.height = '100%';
+                win.querySelector('iframe').style.height = 'calc(100% - 30px)';
+            };
+
+            close.onclick = function() {
+                win.style.display = 'none';
+            };
+        });
+    </script>
+</body>
+</html>
