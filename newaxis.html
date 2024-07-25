@@ -54,6 +54,8 @@
             width: 40px;
             height: 40px;
             background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
             position: relative;
         }
 
@@ -113,6 +115,7 @@
             border-radius: 10px;
             backdrop-filter: blur(10px);
             z-index: 200; /* スタートメニューの下 */
+            display: none; /* 初期状態では非表示 */
         }
 
         .title-bar {
@@ -123,6 +126,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            user-select: none;
         }
 
         .window-controls {
@@ -195,7 +199,7 @@
                     <button class="close">X</button>
                 </div>
             </div>
-            <iframe src="https://www.bing.com" frameborder="0"></iframe>
+            <iframe src="https://www.bing.com" frameborder="0" style="width: 100%; height: calc(100% - 30px);"></iframe>
         </div>
         <div class="window" id="paint">
             <div class="title-bar">
@@ -206,7 +210,7 @@
                     <button class="close">X</button>
                 </div>
             </div>
-            <iframe src="https://sakalt.github.io/paint" frameborder="0"></iframe>
+            <iframe src="https://sakalt.github.io/paint" frameborder="0" style="width: 100%; height: calc(100% - 30px);"></iframe>
         </div>
         <div class="window" id="migdal">
             <div class="title-bar">
@@ -217,7 +221,7 @@
                     <button class="close">X</button>
                 </div>
             </div>
-            <iframe src="https://migdal.jp" frameborder="0"></iframe>
+            <iframe src="https://migdal.jp" frameborder="0" style="width: 100%; height: calc(100% - 30px);"></iframe>
         </div>
         <div class="window" id="calc">
             <div class="title-bar">
@@ -228,7 +232,7 @@
                     <button class="close">X</button>
                 </div>
             </div>
-            <iframe src="data:text/html,<h1>Calc</h1>" frameborder="0"></iframe>
+            <iframe src="data:text/html,<h1>Calc</h1>" frameborder="0" style="width: 100%; height: calc(100% - 30px);"></iframe>
         </div>
         <div class="window" id="notepad">
             <div class="title-bar">
@@ -239,7 +243,7 @@
                     <button class="close">X</button>
                 </div>
             </div>
-            <iframe src="data:text/html,<textarea style='width:100%;height:100%;'></textarea>" frameborder="0"></iframe>
+            <iframe src="data:text/html,<textarea style='width:100%;height:100%;'></textarea>" frameborder="0" style="width: 100%; height: calc(100% - 30px);"></iframe>
         </div>
         <div class="window" id="cmd">
             <div class="title-bar">
@@ -250,20 +254,18 @@
                     <button class="close">X</button>
                 </div>
             </div>
-            <iframe src="data:text/html,<h1>Command Prompt</h1>" frameborder="0"></iframe>
+            <iframe src="data:text/html,<h1>Command Prompt</h1>" frameborder="0" style="width: 100%; height: calc(100% - 30px);"></iframe>
         </div>
     </div>
+
     <audio id="startup-sound" src="myedit_ai_sfx_0725130755.mp3" preload="auto"></audio>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // スタートボタンのクリックでスタートメニューの表示・非表示を切り替え
+            // スタートメニューの表示を切り替え
             document.getElementById('start-btn').addEventListener('click', function() {
                 var menu = document.getElementById('start-menu');
-                if (menu.style.display === 'none' || menu.style.display === '') {
-                    menu.style.display = 'block';
-                } else {
-                    menu.style.display = 'none';
-                }
+                menu.style.display = menu.style.display === 'none' || menu.style.display === '' ? 'block' : 'none';
             });
 
             // スタートメニューの項目をクリックすると対応するウィンドウを表示
@@ -299,6 +301,65 @@
                     document.getElementById('desktop').classList.remove('hidden');
                     document.getElementById('startup-sound').play();
                 }
+            });
+
+            // ウィンドウドラッグ機能
+            let selectedWindow = null;
+            let offsetX, offsetY;
+
+            document.querySelectorAll('.window').forEach(function(win) {
+                const titleBar = win.querySelector('.title-bar');
+
+                titleBar.addEventListener('mousedown', function(e) {
+                    selectedWindow = win;
+                    offsetX = e.clientX - win.getBoundingClientRect().left;
+                    offsetY = e.clientY - win.getBoundingClientRect().top;
+                    document.addEventListener('mousemove', onMouseMove);
+                    document.addEventListener('mouseup', onMouseUp);
+                });
+
+                function onMouseMove(e) {
+                    if (selectedWindow) {
+                        selectedWindow.style.left = `${e.clientX - offsetX}px`;
+                        selectedWindow.style.top = `${e.clientY - offsetY}px`;
+                    }
+                }
+
+                function onMouseUp() {
+                    selectedWindow = null;
+                    document.removeEventListener('mousemove', onMouseMove);
+                    document.removeEventListener('mouseup', onMouseUp);
+                }
+
+                // 最小化、最大化、閉じるボタンの動作
+                const minimizeBtn = win.querySelector('.minimize');
+                const maximizeBtn = win.querySelector('.maximize');
+                const closeBtn = win.querySelector('.close');
+
+                minimizeBtn.addEventListener('click', function() {
+                    win.style.height = '40px';
+                    win.querySelector('iframe').style.display = 'none';
+                });
+
+                maximizeBtn.addEventListener('click', function() {
+                    if (win.style.width === '100vw' && win.style.height === '100vh') {
+                        win.style.width = '300px';
+                        win.style.height = '200px';
+                        win.style.left = '50%';
+                        win.style.top = '50%';
+                        win.style.transform = 'translate(-50%, -50%)';
+                    } else {
+                        win.style.width = '100vw';
+                        win.style.height = '100vh';
+                        win.style.left = '0';
+                        win.style.top = '0';
+                        win.style.transform = 'none';
+                    }
+                });
+
+                closeBtn.addEventListener('click', function() {
+                    win.style.display = 'none';
+                });
             });
         });
     </script>
