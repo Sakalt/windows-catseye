@@ -11,86 +11,95 @@
             font-family: Arial, sans-serif;
             background: url('2535-2560/otsu_city.png') no-repeat center center fixed;
             background-size: cover;
+            overflow: hidden;
+            color: #fff;
+            transition: background-color 0.3s ease;
         }
 
-        #taskbar {
+        #top-line {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 10px;
+            background-color: #00FF00; /* 緑色の線 */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        #window-list {
             position: absolute;
             bottom: 0;
             width: 100%;
             height: 40px;
-            background-color: #1e1e1e;
+            background-color: rgba(0, 0, 0, 0.5);
             color: white;
             display: flex;
-            justify-content: space-between;
             align-items: center;
             padding: 0 10px;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.3);
+            overflow-x: auto;
+            white-space: nowrap;
             z-index: 1000;
         }
 
-        #start-btn {
+        #window-list div {
+            margin-right: 10px;
             cursor: pointer;
-            background-image: url('2535-2560/icon1.png'); /* スタートボタンのアイコン */
-            width: 40px;
-            height: 40px;
-            background-size: cover;
-            z-index: 1010;
         }
 
         #start-menu {
             position: absolute;
-            left: 10px;
-            bottom: 50px;
-            width: 250px;
-            background-color: #333;
+            bottom: 60px;
+            left: 20px;
+            width: 200px;
+            background: rgba(0, 0, 0, 0.7);
             color: white;
-            border: 2px solid #666;
+            border: 1px solid #555;
             border-radius: 5px;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-            display: none;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            display: none; /* 初期状態で非表示 */
             z-index: 1000;
         }
 
-        #start-menu ul {
-            list-style: none;
+        #start-menu a {
+            display: block;
             padding: 10px;
-            margin: 0;
+            color: white;
+            text-decoration: none;
+            border-bottom: 1px solid #666;
         }
 
-        #start-menu ul li {
-            padding: 10px;
-            cursor: pointer;
-            transition: background-color 0.3s;
+        #start-menu a:last-child {
+            border-bottom: none;
         }
 
-        #start-menu ul li:hover {
-            background-color: #555;
+        #start-menu a:hover {
+            background: #333;
         }
 
         .window {
             position: absolute;
             width: 300px;
             height: 200px;
-            background: rgba(0, 0, 0, 0.8);
-            border: 1px solid #00ff00;
-            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid #ccc;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
             border-radius: 5px;
             z-index: 1000;
             resize: both;
             overflow: auto;
             backdrop-filter: blur(5px);
-            display: none; /* 初期状態では非表示 */
+            display: none; /* 初期状態で非表示 */
         }
 
         .title-bar {
             background: #222;
-            color: #00ff00;
+            color: #0ff;
             padding: 5px;
             cursor: move;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #00ff00;
+            border-bottom: 1px solid #444;
         }
 
         .window-controls {
@@ -99,35 +108,122 @@
 
         .window-controls button {
             border: none;
-            color: #00ff00;
+            color: white;
             font-size: 14px;
             width: 30px;
             height: 30px;
             border-radius: 5px;
             margin: 0 2px;
             cursor: pointer;
-            background: rgba(0, 0, 0, 0.5);
             transition: background 0.3s ease;
         }
 
         .minimize {
-            background: #00ff00;
+            background: #10a500;
         }
 
         .maximize {
-            background: #ffcc00;
+            background: #eace2a;
         }
 
         .close {
-            background: #ff0000;
+            background: #ff3300;
         }
 
         .window-controls button:hover {
-            background: rgba(0, 0, 0, 0.7);
+            opacity: 0.8;
         }
 
         .window-controls button:active {
-            background: rgba(0, 0, 0, 0.9);
+            opacity: 0.6;
+        }
+
+        .window-list-item {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .window-list-item.active {
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+
+        #start-button {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            background: url('2535-2560/icon1.png') no-repeat center center;
+            background-size: cover;
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        #control-panel {
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            width: 250px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: 1px solid #555;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            display: none; /* 初期状態で非表示 */
+            z-index: 1000;
+        }
+
+        #control-panel h2 {
+            margin: 0;
+            padding: 0;
+            font-size: 18px;
+            border-bottom: 1px solid #666;
+            margin-bottom: 10px;
+        }
+
+        #control-panel label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        #control-panel input[type="color"] {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 10px;
+            border: 1px solid #666;
+            background: #333;
+            color: white;
+            border-radius: 5px;
+        }
+
+        #control-panel input[type="range"] {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        #control-panel button {
+            padding: 10px;
+            background: #00aaff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        #control-panel button:hover {
+            background: #0088cc;
         }
 
         #lock-screen {
@@ -136,223 +232,250 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            display: flex;
+            background: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            display: none;
             justify-content: center;
             align-items: center;
-            font-size: 24px;
-            text-align: center;
-            z-index: 2000;
-            display: none; /* 初期状態では非表示 */
+            flex-direction: column;
+            z-index: 1000;
         }
 
-        #lock-screen img {
-            width: 100px;
-            height: 100px;
+        #lock-screen h1 {
+            font-size: 36px;
+            margin: 0;
+        }
+
+        #lock-screen p {
+            font-size: 24px;
+            margin: 20px 0;
+        }
+
+        #lock-screen button {
+            padding: 10px 20px;
+            background: #00aaff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        #lock-screen button:hover {
+            background: #0088cc;
         }
     </style>
 </head>
 <body>
-    <audio id="startup-sound" src="myedit_ai_sfx_0725130756.mp3" preload="auto"></audio>
+    <!-- 起動音 -->
+    <audio id="startup-sound" src="myedit_ai_sfx_0725130756.mp3" autoplay></audio>
 
+    <!-- ロック画面 -->
     <div id="lock-screen">
-        <div>
-            <img src="2535-2560/icon1.png" alt="Lock Icon">
-            <p>ようこそ。クリックで解除（タッチ対応）</p>
-        </div>
+        <h1>ようこそ</h1>
+        <p>クリックで解除（タッチ対応）</p>
+        <button onclick="unlockScreen()">解除</button>
     </div>
 
-    <div id="taskbar">
-        <div id="start-btn"></div>
-        <div id="start-menu">
-            <ul>
-                <li data-target="browser">Bing</li>
-                <li data-target="paint">Paint</li>
-                <li data-target="migdal">Migdal</li>
-                <li data-target="calc">Calc</li>
-                <li data-target="notepad">Notepad</li>
-                <li data-target="cmd">Command Prompt</li>
-                <li data-target="dictionary">Dictionary</li> <!-- 辞書アプリの追加 -->
-            </ul>
-        </div>
+    <div id="top-line"></div>
+    <div id="window-list"></div>
+
+    <button id="start-button"></button>
+    <div id="start-menu">
+        <a href="#" onclick="showWindow('browser')">Bing</a>
+        <a href="#" onclick="showWindow('paint')">Paint</a>
+        <a href="#" onclick="showWindow('migdal')">Migdal</a>
+        <a href="#" onclick="showWindow('calc')">Calc</a>
+        <a href="#" onclick="showWindow('notepad')">Notepad</a>
+        <a href="#" onclick="showWindow('dictionary')">Dictionary</a>
+    </div>
+
+    <div id="control-panel">
+        <h2>コントロールパネル</h2>
+        <label for="background-color">背景色:</label>
+        <input type="color" id="background-color" value="#000000">
+        
+        <label for="text-color">テキスト色:</label>
+        <input type="color" id="text-color" value="#FFFFFF">
+        
+        <label for="brightness">明るさ:</label>
+        <input type="range" id="brightness" min="0" max="100" value="100">
+        
+        <button onclick="applyChanges()">変更を適用</button>
     </div>
 
     <div class="window" id="browser">
-        <div class="title-bar">
-            <span class="title">Bing</span>
+        <div class="title-bar" onmousedown="startDrag(event, 'browser')">
+            <span class="title">ブラウザ</span>
             <div class="window-controls">
-                <button class="minimize">_</button>
-                <button class="maximize">[]</button>
-                <button class="close">X</button>
+                <button class="minimize" onclick="minimizeWindow('browser')">_</button>
+                <button class="maximize" onclick="maximizeWindow('browser')">[]</button>
+                <button class="close" onclick="closeWindow('browser')">X</button>
             </div>
         </div>
-        <iframe src="https://www.bing.com" frameborder="0" style="width:100%;height:calc(100% - 30px);"></iframe>
+        <iframe src="https://amuhiku.netlify.app" frameborder="0" style="width:100%;height:calc(100% - 30px);"></iframe>
     </div>
 
     <div class="window" id="paint">
-        <div class="title-bar">
+        <div class="title-bar" onmousedown="startDrag(event, 'paint')">
             <span class="title">Paint</span>
             <div class="window-controls">
-                <button class="minimize">_</button>
-                <button class="maximize">[]</button>
-                <button class="close">X</button>
+                <button class="minimize" onclick="minimizeWindow('paint')">_</button>
+                <button class="maximize" onclick="maximizeWindow('paint')">[]</button>
+                <button class="close" onclick="closeWindow('paint')">X</button>
             </div>
         </div>
         <iframe src="https://sakalt.github.io/paint" frameborder="0" style="width:100%;height:calc(100% - 30px);"></iframe>
     </div>
 
     <div class="window" id="migdal">
-        <div class="title-bar">
+        <div class="title-bar" onmousedown="startDrag(event, 'migdal')">
             <span class="title">Migdal</span>
             <div class="window-controls">
-                <button class="minimize">_</button>
-                <button class="maximize">[]</button>
-                <button class="close">X</button>
+                <button class="minimize" onclick="minimizeWindow('migdal')">_</button>
+                <button class="maximize" onclick="maximizeWindow('migdal')">[]</button>
+                <button class="close" onclick="closeWindow('migdal')">X</button>
             </div>
         </div>
         <iframe src="https://migdal.jp" frameborder="0" style="width:100%;height:calc(100% - 30px);"></iframe>
     </div>
 
     <div class="window" id="calc">
-        <div class="title-bar">
+        <div class="title-bar" onmousedown="startDrag(event, 'calc')">
             <span class="title">Calc</span>
             <div class="window-controls">
-                <button class="minimize">_</button>
-                <button class="maximize">[]</button>
-                <button class="close">X</button>
+                <button class="minimize" onclick="minimizeWindow('calc')">_</button>
+                <button class="maximize" onclick="maximizeWindow('calc')">[]</button>
+                <button class="close" onclick="closeWindow('calc')">X</button>
             </div>
         </div>
-        <iframe src="data:text/html,<h1>Calc</h1>" frameborder="0" style="width:100%;height:calc(100% - 30px);"></iframe>
+        <iframe src="https://www.calculator.net" frameborder="0" style="width:100%;height:calc(100% - 30px);"></iframe>
     </div>
 
     <div class="window" id="notepad">
-        <div class="title-bar">
+        <div class="title-bar" onmousedown="startDrag(event, 'notepad')">
             <span class="title">Notepad</span>
             <div class="window-controls">
-                <button class="minimize">_</button>
-                <button class="maximize">[]</button>
-                <button class="close">X</button>
+                <button class="minimize" onclick="minimizeWindow('notepad')">_</button>
+                <button class="maximize" onclick="maximizeWindow('notepad')">[]</button>
+                <button class="close" onclick="closeWindow('notepad')">X</button>
             </div>
         </div>
-        <iframe src="data:text/html,<textarea style='width:100%;height:100%;'></textarea>" frameborder="0" style="width:100%;height:calc(100% - 30px);"></iframe>
-    </div>
-
-    <div class="window" id="cmd">
-        <div class="title-bar">
-            <span class="title">Command Prompt</span>
-            <div class="window-controls">
-                <button class="minimize">_</button>
-                <button class="maximize">[]</button>
-                <button class="close">X</button>
-            </div>
-        </div>
-        <iframe src="data:text/html,<h1>Command Prompt</h1>" frameborder="0" style="width:100%;height:calc(100% - 30px);"></iframe>
+        <iframe src="notepad-karikyok.html" frameborder="0" style="width:100%;height:calc(100% - 30px);"></iframe>
     </div>
 
     <div class="window" id="dictionary">
-        <div class="title-bar">
+        <div class="title-bar" onmousedown="startDrag(event, 'dictionary')">
             <span class="title">Dictionary</span>
             <div class="window-controls">
-                <button class="minimize">_</button>
-                <button class="maximize">[]</button>
-                <button class="close">X</button>
+                <button class="minimize" onclick="minimizeWindow('dictionary')">_</button>
+                <button class="maximize" onclick="maximizeWindow('dictionary')">[]</button>
+                <button class="close" onclick="closeWindow('dictionary')">X</button>
             </div>
         </div>
-        <iframe src="https://amuhiku.netlifty.app" frameborder="0" style="width:100%;height:calc(100% - 30px);"></iframe>
+        <iframe src="dictionary.html" frameborder="0" style="width:100%;height:calc(100% - 30px);"></iframe>
     </div>
 
     <script>
-        // ロック画面の表示
-        window.addEventListener('load', function() {
-            document.getElementById('startup-sound').play();
-            setTimeout(function() {
-                document.getElementById('lock-screen').style.display = 'flex';
-            }, 1000); // 起動音の後にロック画面を表示
-        });
+        document.addEventListener('DOMContentLoaded', function() {
+            // ロック画面を表示
+            document.getElementById('lock-screen').style.display = 'flex';
 
-        // ロック画面解除
-        document.getElementById('lock-screen').addEventListener('click', function() {
-            document.getElementById('lock-screen').style.display = 'none';
-        });
-
-        // スタートボタンのクリックイベント
-        document.getElementById('start-btn').addEventListener('click', function() {
-            var menu = document.getElementById('start-menu');
-            if (menu.style.display === 'none' || menu.style.display === '') {
-                menu.style.display = 'block';
-            } else {
-                menu.style.display = 'none';
-            }
-        });
-
-        // スタートメニューアイテムのクリックイベント
-        document.querySelectorAll('#start-menu ul li').forEach(function(item) {
-            item.addEventListener('click', function() {
-                var target = document.getElementById(this.getAttribute('data-target'));
-                if (target) {
-                    target.style.display = target.style.display === 'none' ? 'block' : 'none';
-                }
+            // スタートメニューとコントロールパネルのトグル
+            document.getElementById('start-button').addEventListener('click', function() {
+                const menu = document.getElementById('start-menu');
+                menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
             });
-        });
 
-        // ウィンドウのドラッグ機能
-        document.querySelectorAll('.title-bar').forEach(function(titleBar) {
-            titleBar.onmousedown = function(event) {
-                var windowElement = titleBar.parentElement;
-                var shiftX = event.clientX - windowElement.getBoundingClientRect().left;
-                var shiftY = event.clientY - windowElement.getBoundingClientRect().top;
+            document.getElementById('control-panel').addEventListener('click', function() {
+                const panel = document.getElementById('control-panel');
+                panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+            });
 
-                function moveAt(pageX, pageY) {
-                    windowElement.style.left = pageX - shiftX + 'px';
-                    windowElement.style.top = pageY - shiftY + 'px';
-                }
+            // ダークモードと暗さ調節
+            document.getElementById('brightness').addEventListener('input', function() {
+                const brightness = this.value;
+                document.body.style.filter = `brightness(${brightness}%)`;
+            });
 
-                moveAt(event.pageX, event.pageY);
-
-                function onMouseMove(event) {
-                    moveAt(event.pageX, event.pageY);
-                }
-
-                document.addEventListener('mousemove', onMouseMove);
-
-                titleBar.onmouseup = function() {
-                    document.removeEventListener('mousemove', onMouseMove);
-                    titleBar.onmouseup = null;
-                };
+            // ロック画面解除
+            window.unlockScreen = function() {
+                document.getElementById('lock-screen').style.display = 'none';
             };
 
-            titleBar.ondragstart = function() {
-                return false;
+            // ウィンドウ操作
+            window.showWindow = function(id) {
+                const windows = document.querySelectorAll('.window');
+                windows.forEach(win => {
+                    win.style.display = 'none';
+                    document.querySelector('#window-list').innerHTML = '';
+                });
+                document.getElementById(id).style.display = 'block';
+                const item = document.createElement('div');
+                item.className = 'window-list-item active';
+                item.textContent = id;
+                document.getElementById('window-list').appendChild(item);
             };
-        });
 
-        // ウィンドウの制御
-        document.querySelectorAll('.window-controls .minimize').forEach(function(button) {
-            button.addEventListener('click', function() {
-                var windowElement = this.closest('.window');
-                windowElement.style.display = 'none';
-            });
-        });
+            window.minimizeWindow = function(id) {
+                const win = document.getElementById(id);
+                win.style.display = 'none';
+                const item = document.querySelector(`#window-list .window-list-item:contains('${id}')`);
+                if (item) item.classList.remove('active');
+            };
 
-        document.querySelectorAll('.window-controls .maximize').forEach(function(button) {
-            button.addEventListener('click', function() {
-                var windowElement = this.closest('.window');
-                if (windowElement.style.width === '100%' && windowElement.style.height === '100%') {
-                    windowElement.style.width = '300px';
-                    windowElement.style.height = '200px';
+            window.maximizeWindow = function(id) {
+                const win = document.getElementById(id);
+                if (win.style.width === '100%' && win.style.height === '100%') {
+                    win.style.width = '300px';
+                    win.style.height = '200px';
+                    win.style.top = '50px';
+                    win.style.left = '50px';
                 } else {
-                    windowElement.style.width = '100%';
-                    windowElement.style.height = '100%';
+                    win.style.width = '100%';
+                    win.style.height = '100%';
+                    win.style.top = '0';
+                    win.style.left = '0';
                 }
-            });
-        });
+            };
 
-        document.querySelectorAll('.window-controls .close').forEach(function(button) {
-            button.addEventListener('click', function() {
-                var windowElement = this.closest('.window');
-                windowElement.style.display = 'none';
+            window.closeWindow = function(id) {
+                const win = document.getElementById(id);
+                win.style.display = 'none';
+                const item = document.querySelector(`#window-list .window-list-item:contains('${id}')`);
+                if (item) item.remove();
+            };
+
+            window.startDrag = function(e, id) {
+                const win = document.getElementById(id);
+                const offsetX = e.clientX - win.getBoundingClientRect().left;
+                const offsetY = e.clientY - win.getBoundingClientRect().top;
+
+                function dragMove(e) {
+                    win.style.left = (e.clientX - offsetX) + 'px';
+                    win.style.top = (e.clientY - offsetY) + 'px';
+                }
+
+                function dragEnd() {
+                    document.removeEventListener('mousemove', dragMove);
+                    document.removeEventListener('mouseup', dragEnd);
+                }
+
+                document.addEventListener('mousemove', dragMove);
+                document.addEventListener('mouseup', dragEnd);
+            };
+
+            document.getElementById('start-button').addEventListener('click', function() {
+                const menu = document.getElementById('start-menu');
+                menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
             });
+
+            window.applyChanges = function() {
+                const bgColor = document.getElementById('background-color').value;
+                const textColor = document.getElementById('text-color').value;
+                document.body.style.backgroundColor = bgColor;
+                document.body.style.color = textColor;
+            };
         });
     </script>
 </body>
