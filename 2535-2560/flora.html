@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows Flora</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: url('2535-2560/otsu_city.png') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        #taskbar {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 40px;
+            background-color: #333;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 10px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+        }
+
+        #start-btn {
+            cursor: pointer;
+            background-image: url('majaurstart.png');
+            width: 40px;
+            height: 40px;
+            background-size: cover;
+        }
+
+        #start-menu {
+            position: absolute;
+            left: 10px;
+            bottom: 50px;
+            width: 250px;
+            background-color: #333;
+            color: white;
+            border: 2px solid #666;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+            display: none;
+            z-index: 1000;
+        }
+
+        #start-menu ul {
+            list-style: none;
+            padding: 10px;
+            margin: 0;
+        }
+
+        #start-menu ul li {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        #start-menu ul li:hover {
+            background-color: #555;
+        }
+
+        .window {
+            position: absolute;
+            width: 300px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid #ccc;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+            z-index: 1000;
+            resize: both;
+            overflow: auto;
+            backdrop-filter: blur(5px);
+        }
+
+        .title-bar {
+            background: #555;
+            color: white;
+            padding: 5px;
+            cursor: move;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .window-controls {
+            display: flex;
+        }
+
+        .window-controls button {
+            border: none;
+            color: white;
+            font-size: 14px;
+            width: 30px;
+            height: 30px;
+            border-radius: 5px;
+            margin: 0 2px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .minimize {
+            background: #10a500;
+        }
+
+        .maximize {
+            background: #eace2a;
+        }
+
+        .close {
+            background: #ff3300;
+        }
+
+        .window-controls button:hover {
+            opacity: 0.8;
+        }
+
+        .window-controls button:active {
+            opacity: 0.6;
+        }
+    </style>
+</head>
+<body>
+    <div id="taskbar">
+        <div id="start-btn"></div>
+        <div id="start-menu">
+            <ul>
+                <li data-target="browser">Bing</li>
+                <li data-target="paint">Paint</li>
+                <li data-target="migdal">Migdal</li>
+                <li data-target="calc">Calc</li>
+                <li data-target="notepad">Notepad</li>
+                <li data-target="cmd">Command Prompt</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="window" id="browser">
+        <div class="title-bar">
+            <span class="title">Bing</span>
+            <div class="window-controls">
+                <button class="minimize">_</button>
+                <button class="maximize">[]</button>
+                <button class="close">X</button>
+            </div>
+        </div>
+        <iframe src="https://www.bing.com" frameborder="0" style="width:100%;height:calc(100% - 30px);"></iframe>
+    </div>
+
+    <div class="window" id="paint">
+        <div class="title-bar">
+            <span class="title">Paint</span>
+            <div class="window-controls">
+                <button class="minimize">_</button>
+                <button class="maximize">[]</button>
+                <button class="close">X</button>
+            </div>
+        </div>
+        <iframe src="https://sakalt.github.io/paint" frameborder="0" style="width:100%;height:calc(100% - 30px);"></iframe>
+    </div>
+
+    <div class="window" id="migdal">
+        <div class="title-bar">
+            <span class="title">Migdal</span>
+            <div class="window-controls">
+                <button class="minimize">_</button>
+                <button class="maximize">[]</button>
+                <button class="close">X</button>
+            </div>
+        </div>
+        <iframe src="https://migdal.jp" frameborder="0" style="width:100%;height:calc(100% - 30px);"></iframe>
+    </div>
+
+    <div class="window" id="calc">
+        <div class="title-bar">
+            <span class="title">Calc</span>
+            <div class="window-controls">
+                <button class="minimize">_</button>
+                <button class="maximize">[]</button>
+                <button class="close">X</button>
+            </div>
+        </div>
+        <iframe src="data:text/html,<h1>Calc</h1>" frameborder="0" style="width:100%;height:calc(100% - 30px);"></iframe>
+    </div>
+
+    <div class="window" id="notepad">
+        <div class="title-bar">
+            <span class="title">Notepad</span>
+            <div class="window-controls">
+                <button class="minimize">_</button>
+                <button class="maximize">[]</button>
+                <button class="close">X</button>
+            </div>
+        </div>
+        <iframe src="data:text/html,<textarea style='width:100%;height:100%;'></textarea>" frameborder="0" style="width:100%;height:calc(100% - 30px);"></iframe>
+    </div>
+
+    <div class="window" id="cmd">
+        <div class="title-bar">
+            <span class="title">Command Prompt</span>
+            <div class="window-controls">
+                <button class="minimize">_</button>
+                <button class="maximize">[]</button>
+                <button class="close">X</button>
+            </div>
+        </div>
+        <iframe src="data:text/html,<h1>Command Prompt</h1>" frameborder="0" style="width:100%;height:calc(100% - 30px);"></iframe>
+    </div>
+
+    <script>
+        document.getElementById('start-btn').addEventListener('click', function() {
+            var menu = document.getElementById('start-menu');
+            if (menu.style.display === 'none' || menu.style.display === '') {
+                menu.style.display = 'block';
+            } else {
+                menu.style.display = 'none';
+            }
+        });
+
+        document.querySelectorAll('#start-menu ul li').forEach(function(item) {
+            item.addEventListener('click', function() {
+                var targetId = item.getAttribute('data-target');
+                document.querySelectorAll('.window').forEach(function(win) {
+                    win.style.display = 'none';
+                });
+                document.getElementById(targetId).style.display = 'block';
+                document.getElementById('start-menu').style.display = 'none';
+            });
+        });
+
+        document.querySelectorAll('.window-controls .minimize').forEach(function(button) {
+            button.addEventListener('click', function() {
+                this.parentElement.parentElement.parentElement.style.display = 'none';
+            });
+        });
+
+        document.querySelectorAll('.window-controls .maximize').forEach(function(button) {
+            button.addEventListener('click', function() {
+                var window = this.parentElement.parentElement.parentElement;
+                window.style.width = '100%';
+                window.style.height = '100%';
+                window.style.top = '0';
+                window.style.left = '0';
+            });
+        });
+
+        document.querySelectorAll('.window-controls .close').forEach(function(button) {
+            button.addEventListener('click', function() {
+                this.parentElement.parentElement.parentElement.style.display = 'none';
+            });
+        });
+    </script>
+</body>
+</html>
