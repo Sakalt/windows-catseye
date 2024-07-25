@@ -44,20 +44,55 @@
             padding: 0 10px;
         }
 
-        #start-btn {
+        #taskbar #start-menu {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 450px;
+            height: 100px;
+            background-color: black;
+            border: 2px solid white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        #taskbar #start-btn {
             cursor: pointer;
+            background-image: url('majaurstart.png');
+            width: 40px;
+            height: 40px;
+            background-size: cover;
+            position: relative;
+        }
+
+        #taskbar #start-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 60px;
+            height: 60px;
+            background-color: black;
+            border: 2px solid white;
+            transform: translate(-50%, -50%) rotate(45deg);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
         }
 
         .window {
             position: absolute;
             width: 300px;
             height: 200px;
-            background: white;
+            background: rgba(255, 255, 255, 0.9);
             border: 1px solid #ccc;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
             resize: both;
             overflow: auto;
             border-radius: 10px;
+            backdrop-filter: blur(10px);
         }
 
         .title-bar {
@@ -75,9 +110,8 @@
         }
 
         .window-controls button {
-            background: linear-gradient(145deg, #ddd, #ccc);
             border: none;
-            color: #333;
+            color: white;
             font-size: 14px;
             width: 30px;
             height: 30px;
@@ -88,12 +122,24 @@
             transition: background 0.3s ease;
         }
 
+        .window-controls .minimize {
+            background: linear-gradient(145deg, #10a500, #80b87a);
+        }
+
+        .window-controls .maximize {
+            background: linear-gradient(145deg, #eace2a, #fff3ac);
+        }
+
+        .window-controls .close {
+            background: linear-gradient(145deg, #ff3300, #ffbcac);
+        }
+
         .window-controls button:hover {
-            background: linear-gradient(145deg, #ccc, #ddd);
+            opacity: 0.8;
         }
 
         .window-controls button:active {
-            background: linear-gradient(145deg, #bbb, #ddd);
+            opacity: 0.6;
         }
 
         iframe {
@@ -122,7 +168,9 @@
     </div>
     <div id="desktop" class="hidden">
         <div id="taskbar">
-            <img src="majaurstart.png" id="start-btn" alt="Start">
+            <div id="start-menu">
+                <div id="start-btn"></div>
+            </div>
             <div id="taskbar-items">
                 <button id="lang-toggle">日本語</button>
                 <button id="version-info">バージョン情報</button>
@@ -249,6 +297,34 @@
             close.onclick = function() {
                 win.style.display = 'none';
             };
+        });
+
+        // タッチ対応のドラッグ機能
+        document.addEventListener('touchstart', function(event) {
+            const touch = event.touches[0];
+            const target = touch.target.closest('.title-bar');
+            if (target) {
+                let shiftX = touch.clientX - target.closest('.window').getBoundingClientRect().left;
+                let shiftY = touch.clientY - target.closest('.window').getBoundingClientRect().top;
+
+                function moveAt(pageX, pageY) {
+                    target.closest('.window').style.left = pageX - shiftX + 'px';
+                    target.closest('.window').style.top = pageY - shiftY + 'px';
+                }
+
+                moveAt(touch.pageX, touch.pageY);
+
+                function onTouchMove(event) {
+                    const touch = event.touches[0];
+                    moveAt(touch.pageX, touch.pageY);
+                }
+
+                document.addEventListener('touchmove', onTouchMove);
+
+                document.addEventListener('touchend', function() {
+                    document.removeEventListener('touchmove', onTouchMove);
+                }, { once: true });
+            }
         });
     </script>
 </body>
