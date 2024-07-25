@@ -1,1 +1,1 @@
-https://sakalt.github.io/newasis.html
+https://sakalt.github.io/newaxis.html
