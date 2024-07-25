@@ -171,7 +171,7 @@
     </style>
 </head>
 <body>
-    <audio id="startup-sound" src="myedit_ai_sfx_0725130755.mp3" preload="auto"></audio>
+    <audio id="startup-sound" src="cc9b71e3-e4aa-4e73-9397-906b6decr724.webm" preload="auto"></audio>
 
     <div id="start-button"></div>
     <div class="divider"></div>
@@ -187,7 +187,7 @@
             <li onclick="showWindow('memory-monitor')">メモリモニタリング</li>
             <li onclick="showWindow('timer')">タイマー</li>
             <li onclick="showWindow('weather')">天気予報</li>
-            <li onclick="showWindow('control-panel)">コントロールパネル</li>
+            <li onclick="showWindow('control-panel')">コントロールパネル</li>
         </ul>
     </div>
 
@@ -252,7 +252,7 @@
         </div>
         <iframe src="https://sakalt.github.io/calc" frameborder="0" style="width:100%;height:calc(100% - 30px);"></iframe>
     </div>
-
+    
     <div class="window" id="paint">
         <div class="title-bar" onmousedown="startDrag(event, 'paint')">
             <span class="title">Paint</span>
@@ -262,19 +262,31 @@
                 <button class="close" onclick="closeWindow('paint')">X</button>
             </div>
         </div>
-        <iframe src="https://sakalt.github.io/paint" frameborder="0" style="width:100%;height:calc(100% - 30px);"></iframe>
+        <iframe src="https://jspaint.app" frameborder="0" style="width:100%;height:calc(100% - 30px);"></iframe>
+    </div>
+
+    <div class="window" id="notepad">
+        <div class="title-bar" onmousedown="startDrag(event, 'notepad')">
+            <span class="title">Notepad</span>
+            <div class="window-controls">
+                <button class="minimize" onclick="minimizeWindow('notepad')">_</button>
+                <button class="maximize" onclick="maximizeWindow('notepad')">[]</button>
+                <button class="close" onclick="closeWindow('notepad')">X</button>
+            </div>
+        </div>
+        <iframe src="https://editpad.org" frameborder="0" style="width:100%;height:calc(100% - 30px);"></iframe>
     </div>
 
     <div class="window" id="migdal">
         <div class="title-bar" onmousedown="startDrag(event, 'migdal')">
-            <span class="title">Migdal</span>
+            <span class="title">migdal</span>
             <div class="window-controls">
                 <button class="minimize" onclick="minimizeWindow('migdal')">_</button>
                 <button class="maximize" onclick="maximizeWindow('migdal')">[]</button>
                 <button class="close" onclick="closeWindow('migdal')">X</button>
             </div>
         </div>
-        <iframe src="https://migdal.jp" frameborder="0" style="width:100%;height:calc(100% - 30px);"></iframe>
+        <iframe src="https://v6p9d9t4.ssl.hwcdn.net/html/6140406/migdal_v1.5/index.html" frameborder="0" style="width:100%;height:calc(100% - 30px);"></iframe>
     </div>
 
     <div class="window" id="memory-monitor">
@@ -286,9 +298,7 @@
                 <button class="close" onclick="closeWindow('memory-monitor')">X</button>
             </div>
         </div>
-        <div style="padding: 10px;">
-            <p>使用中のメモリ: <span id="memory-usage"></span>%</p>
-        </div>
+        <iframe src="about:blank" frameborder="0" style="width:100%;height:calc(100% - 30px);"></iframe>
     </div>
 
     <div class="window" id="timer">
@@ -300,14 +310,7 @@
                 <button class="close" onclick="closeWindow('timer')">X</button>
             </div>
         </div>
-        <div style="padding: 10px;">
-            <p>タイマー:</p>
-            <input type="number" id="timer-minutes" placeholder="分" min="0">
-            <input type="number" id="timer-seconds" placeholder="秒" min="0">
-            <button onclick="startTimer()">スタート</button>
-            <button onclick="stopTimer()">ストップ</button>
-            <p>残り時間: <span id="timer-display">00:00</span></p>
-        </div>
+        <iframe src="about:blank" frameborder="0" style="width:100%;height:calc(100% - 30px);"></iframe>
     </div>
 
     <div class="window" id="weather">
@@ -319,192 +322,138 @@
                 <button class="close" onclick="closeWindow('weather')">X</button>
             </div>
         </div>
-        <div style="padding: 10px;">
-            <p>現在の天気: <span id="weather-info">不明</span></p>
-        </div>
+        <iframe src="https://www.weather.com" frameborder="0" style="width:100%;height:calc(100% - 30px);"></iframe>
     </div>
 
     <div id="window-list"></div>
 
     <script>
-        document.getElementById('start-button').addEventListener('click', function() {
-            var startMenu = document.getElementById('start-menu');
+        const startButton = document.getElementById('start-button');
+        const startMenu = document.getElementById('start-menu');
+        const controlPanel = document.getElementById('control-panel');
+        const windows = document.querySelectorAll('.window');
+        const windowList = document.getElementById('window-list');
+        let activeWindows = [];
+
+        startButton.addEventListener('click', () => {
             startMenu.style.display = startMenu.style.display === 'none' ? 'block' : 'none';
         });
 
         function showWindow(windowId) {
-            var windows = document.querySelectorAll('.window');
-            windows.forEach(function(win) {
-                win.style.display = 'none';
-            });
-
-            var selectedWindow = document.getElementById(windowId);
-            selectedWindow.style.display = 'block';
-            addToWindowList(windowId);
-        }
-
-        function minimizeWindow(windowId) {
-            var window = document.getElementById(windowId);
-            window.style.display = 'none';
-        }
-
-        function maximizeWindow(windowId) {
-            var window = document.getElementById(windowId);
-            window.style.width = '100%';
-            window.style.height = '100%';
-            window.style.top = '0';
-            window.style.left = '0';
+            const windowElement = document.getElementById(windowId);
+            if (windowElement) {
+                windowElement.style.display = 'block';
+                bringToFront(windowElement);
+                if (!activeWindows.includes(windowId)) {
+                    activeWindows.push(windowId);
+                    updateWindowList();
+                }
+            }
         }
 
         function closeWindow(windowId) {
-            var window = document.getElementById(windowId);
-            window.style.display = 'none';
-            removeFromWindowList(windowId);
-        }
-
-        function startDrag(event, windowId) {
-            var window = document.getElementById(windowId);
-            var shiftX = event.clientX - window.getBoundingClientRect().left;
-            var shiftY = event.clientY - window.getBoundingClientRect().top;
-
-            function moveAt(pageX, pageY) {
-                window.style.left = pageX - shiftX + 'px';
-                window.style.top = pageY - shiftY + 'px';
+            const windowElement = document.getElementById(windowId);
+            if (windowElement) {
+                windowElement.style.display = 'none';
+                activeWindows = activeWindows.filter(id => id !== windowId);
+                updateWindowList();
             }
+        }
 
-            function onMouseMove(event) {
-                moveAt(event.pageX, event.pageY);
+        function minimizeWindow(windowId) {
+            const windowElement = document.getElementById(windowId);
+            if (windowElement) {
+                windowElement.style.display = 'none';
+                updateWindowList();
             }
-
-            document.addEventListener('mousemove', onMouseMove);
-
-            window.onmouseup = function() {
-                document.removeEventListener('mousemove', onMouseMove);
-                window.onmouseup = null;
-            };
         }
 
-        function addToWindowList(windowId) {
-            var windowList = document.getElementById('window-list');
-            var listItem = document.createElement('div');
-            listItem.className = 'window-list-item';
-            listItem.textContent = document.querySelector('#' + windowId + ' .title-bar .title').textContent;
-            listItem.dataset.windowId = windowId;
-            listItem.onclick = function() {
-                showWindow(windowId);
-            };
-            windowList.appendChild(listItem);
-        }
-
-        function removeFromWindowList(windowId) {
-            var windowList = document.getElementById('window-list');
-            var items = windowList.querySelectorAll('.window-list-item');
-            items.forEach(function(item) {
-                if (item.dataset.windowId === windowId) {
-                    windowList.removeChild(item);
+        function maximizeWindow(windowId) {
+            const windowElement = document.getElementById(windowId);
+            if (windowElement) {
+                if (windowElement.classList.contains('maximized')) {
+                    windowElement.classList.remove('maximized');
+                    windowElement.style.width = '300px';
+                    windowElement.style.height = '200px';
+                } else {
+                    windowElement.classList.add('maximized');
+                    windowElement.style.width = '100%';
+                    windowElement.style.height = 'calc(100% - 30px)';
                 }
+                bringToFront(windowElement);
+            }
+        }
+
+        function updateWindowList() {
+            windowList.innerHTML = '';
+            activeWindows.forEach(windowId => {
+                const listItem = document.createElement('div');
+                listItem.className = 'window-list-item';
+                listItem.innerText = windowId;
+                listItem.addEventListener('click', () => {
+                    showWindow(windowId);
+                    bringToFront(document.getElementById(windowId));
+                });
+                windowList.appendChild(listItem);
             });
         }
 
+        function bringToFront(windowElement) {
+            windows.forEach(win => {
+                win.style.zIndex = '1000';
+            });
+            windowElement.style.zIndex = '1001';
+        }
+
+        let dragOffsetX, dragOffsetY, draggedWindow;
+
+        function startDrag(event, windowId) {
+            draggedWindow = document.getElementById(windowId);
+            dragOffsetX = event.clientX - draggedWindow.getBoundingClientRect().left;
+            dragOffsetY = event.clientY - draggedWindow.getBoundingClientRect().top;
+            document.addEventListener('mousemove', onDrag);
+            document.addEventListener('mouseup', stopDrag);
+        }
+
+        function onDrag(event) {
+            if (draggedWindow) {
+                draggedWindow.style.left = `${event.clientX - dragOffsetX}px`;
+                draggedWindow.style.top = `${event.clientY - dragOffsetY}px`;
+            }
+        }
+
+        function stopDrag() {
+            document.removeEventListener('mousemove', onDrag);
+            document.removeEventListener('mouseup', stopDrag);
+            draggedWindow = null;
+        }
+
         function applyChanges() {
-            var backgroundColor = document.getElementById('background-color').value;
-            var textColor = document.getElementById('text-color').value;
-            var brightness = document.getElementById('brightness').value;
-            var language = document.getElementById('language').value;
+            const backgroundColor = document.getElementById('background-color').value;
+            const textColor = document.getElementById('text-color').value;
+            const brightness = document.getElementById('brightness').value;
+            const language = document.getElementById('language').value;
 
             document.body.style.backgroundColor = backgroundColor;
             document.body.style.color = textColor;
             document.body.style.filter = `brightness(${brightness}%)`;
 
-            if (language === 'ja') {
-                // 日本語設定
-                document.title = 'Windows Lux';
-                document.getElementById('control-panel').querySelector('h2').textContent = 'コントロールパネル';
-                document.getElementById('start-menu').querySelectorAll('li')[0].textContent = 'ブラウザ';
-                document.getElementById('start-menu').querySelectorAll('li')[1].textContent = 'Paint';
-                document.getElementById('start-menu').querySelectorAll('li')[2].textContent = 'Migdal';
-                document.getElementById('start-menu').querySelectorAll('li')[3].textContent = 'Calc';
-                document.getElementById('start-menu').querySelectorAll('li')[4].textContent = 'Notepad';
-                document.getElementById('start-menu').querySelectorAll('li')[5].textContent = 'Dictionary';
-                document.getElementById('start-menu').querySelectorAll('li')[6].textContent = 'メモリモニタリング';
-                document.getElementById('start-menu').querySelectorAll('li')[7].textContent = 'タイマー';
-                document.getElementById('start-menu').querySelectorAll('li')[8].textContent = '天気予報';
-                document.getElementById('start-menu').querySelectorAll('li')[9].textContent = 'コントロールパネル';
-            } else if (language === 'en') {
-                // 英語設定
-                document.title = 'Windows Lux';
-                document.getElementById('control-panel').querySelector('h2').textContent = 'Control Panel';
-                document.getElementById('start-menu').querySelectorAll('li')[0].textContent = 'Browser';
-                document.getElementById('start-menu').querySelectorAll('li')[1].textContent = 'Paint';
-                document.getElementById('start-menu').querySelectorAll('li')[2].textContent = 'Migdal';
-                document.getElementById('start-menu').querySelectorAll('li')[3].textContent = 'Calc';
-                document.getElementById('start-menu').querySelectorAll('li')[4].textContent = 'Notepad';
-                document.getElementById('start-menu').querySelectorAll('li')[5].textContent = 'Dictionary';
-                document.getElementById('start-menu').querySelectorAll('li')[6].textContent = 'Memory Monitoring';
-                document.getElementById('start-menu').querySelectorAll('li')[7].textContent = 'Timer';
-                document.getElementById('start-menu').querySelectorAll('li')[8].textContent = 'Weather';
-                document.getElementById('start-menu').querySelectorAll('li')[9].textContent = 'Control Panel';
-            } else if (language === 'vi') {
-                // ベトナム語設定
-                document.title = 'Windows Lux';
-                document.getElementById('control-panel').querySelector('h2').textContent = 'Bảng điều khiển';
-                document.getElementById('start-menu').querySelectorAll('li')[0].textContent = 'Trình duyệt';
-                document.getElementById('start-menu').querySelectorAll('li')[1].textContent = 'Paint';
-                document.getElementById('start-menu').querySelectorAll('li')[2].textContent = 'Migdal';
-                document.getElementById('start-menu').querySelectorAll('li')[3].textContent = 'Calc';
-                document.getElementById('start-menu').querySelectorAll('li')[4].textContent = 'Notepad';
-                document.getElementById('start-menu').querySelectorAll('li')[5].textContent = 'Từ điển';
-                document.getElementById('start-menu').querySelectorAll('li')[6].textContent = 'Giám sát bộ nhớ';
-                document.getElementById('start-menu').querySelectorAll('li')[7].textContent = 'Hẹn giờ';
-                document.getElementById('start-menu').querySelectorAll('li')[8].textContent = 'Dự báo thời tiết';
-                document.getElementById('start-menu').querySelectorAll('li')[9].textContent = 'Bảng điều khiển';
-            }
+            // 言語設定の反映（日本語、英語、ベトナム語）
+            const startMenuItems = {
+                'ja': ['ブラウザ', 'Paint', 'Migdal', 'Calc', 'Notepad', 'Dictionary', 'メモリモニタリング', 'タイマー', '天気予報', 'コントロールパネル'],
+                'en': ['Browser', 'Paint', 'Migdal', 'Calc', 'Notepad', 'Dictionary', 'Memory Monitoring', 'Timer', 'Weather', 'Control Panel'],
+                'vi': ['Trình duyệt', 'Paint', 'Migdal', 'Calc', 'Notepad', 'Dictionary', 'Giám sát bộ nhớ', 'Hẹn giờ', 'Dự báo thời tiết', 'Bảng điều khiển']
+            };
+            const items = startMenuItems[language];
+            const ul = startMenu.querySelector('ul');
+            ul.innerHTML = '';
+            items.forEach((item, index) => {
+                const li = document.createElement('li');
+                li.innerText = item;
+                li.setAttribute('onclick', `showWindow('${items[index].toLowerCase().replace(/ /g, '-')})`);
+                ul.appendChild(li);
+            });
         }
-
-        function startTimer() {
-            var minutes = parseInt(document.getElementById('timer-minutes').value) || 0;
-            var seconds = parseInt(document.getElementById('timer-seconds').value) || 0;
-            var totalSeconds = minutes * 60 + seconds;
-
-            var timerDisplay = document.getElementById('timer-display');
-            timerDisplay.textContent = formatTime(totalSeconds);
-
-            var timerInterval = setInterval(function() {
-                if (totalSeconds <= 0) {
-                    clearInterval(timerInterval);
-                    timerDisplay.textContent = '00:00';
-                    alert('タイマーが終了しました');
-                } else {
-                    totalSeconds--;
-                    timerDisplay.textContent = formatTime(totalSeconds);
-                }
-            }, 1000);
-        }
-
-        function stopTimer() {
-            clearInterval(timerInterval);
-        }
-
-        function formatTime(seconds) {
-            var minutes = Math.floor(seconds / 60);
-            var seconds = seconds % 60;
-            return (minutes < 10 ? '0' : '') + minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
-        }
-
-        function updateMemoryUsage() {
-            var memoryUsage = Math.floor(Math.random() * 100);
-            document.getElementById('memory-usage').textContent = memoryUsage;
-        }
-
-        setInterval(updateMemoryUsage, 1000);
-
-        function fetchWeather() {
-            // ここで天気APIを使用して天気情報を取得します
-            var weatherInfo = '晴れ';  // 仮の天気情報
-            document.getElementById('weather-info').textContent = weatherInfo;
-        }
-
-        fetchWeather();
     </script>
 </body>
 </html>
