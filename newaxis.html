@@ -221,14 +221,14 @@
         </div>
         <div class="window" id="calc">
             <div class="title-bar">
-                <span class="title">Calc</span>
+                <span class="title">Calculator</span>
                 <div class="window-controls">
                     <button class="minimize">_</button>
                     <button class="maximize">[]</button>
                     <button class="close">X</button>
                 </div>
             </div>
-            <iframe src="data:text/html,<h1>Calc</h1>" frameborder="0"></iframe>
+            <iframe src="https://www.google.com/search?q=calculator" frameborder="0"></iframe>
         </div>
         <div class="window" id="notepad">
             <div class="title-bar">
@@ -239,7 +239,7 @@
                     <button class="close">X</button>
                 </div>
             </div>
-            <iframe src="data:text/html,<textarea style='width:100%;height:100%;'></textarea>" frameborder="0"></iframe>
+            <iframe src="data:text/html,<h1>Notepad</h1>" frameborder="0"></iframe>
         </div>
         <div class="window" id="cmd">
             <div class="title-bar">
@@ -253,99 +253,101 @@
             <iframe src="data:text/html,<h1>Command Prompt</h1>" frameborder="0"></iframe>
         </div>
     </div>
-    <audio id="startup-sound" src="startup.mp3"></audio>
+    <audio id="startup-sound" src="myedit_ai_sfx_0725130755.mp3"></audio>
     <script>
-        // スタートボタンのクリックでスタートメニューの表示・非表示を切り替え
-        document.getElementById('start-btn').addEventListener('click', function() {
-            var menu = document.getElementById('start-menu');
-            if (menu.style.display === 'none' || menu.style.display === '') {
-                menu.style.display = 'block';
-            } else {
-                menu.style.display = 'none';
-            }
-        });
-
-        // スタートメニューの項目をクリックすると対応するウィンドウを表示
-        document.querySelectorAll('#start-menu ul li').forEach(function(item) {
-            item.addEventListener('click', function() {
-                var targetId = item.getAttribute('data-target');
-                var targetWindow = document.getElementById(targetId);
-                if (targetWindow) {
-                    targetWindow.style.display = 'block';
-                }
-            });
-        });
-
-        // 解除ボタンがクリックされたとき
-        document.getElementById('unlock-btn').addEventListener('click', function() {
-            document.getElementById('lock-screen').classList.add('hidden');
-            document.getElementById('desktop').classList.remove('hidden');
-            document.getElementById('startup-sound').play();
-        });
-
-        // ウィンドウをドラッグ可能にする
-        document.querySelectorAll('.window').forEach(function(window) {
-            let titleBar = window.querySelector('.title-bar');
-            titleBar.onmousedown = function(e) {
-                let offsetX = e.clientX - window.getBoundingClientRect().left;
-                let offsetY = e.clientY - window.getBoundingClientRect().top;
-
-                function onMouseMove(e) {
-                    window.style.left = (e.clientX - offsetX) + 'px';
-                    window.style.top = (e.clientY - offsetY) + 'px';
-                }
-
-                function onMouseUp() {
-                    document.removeEventListener('mousemove', onMouseMove);
-                    document.removeEventListener('mouseup', onMouseUp);
-                }
-
-                document.addEventListener('mousemove', onMouseMove);
-                document.addEventListener('mouseup', onMouseUp);
-            };
-        });
-
-        // ウィンドウの最小化、最大化、閉じる機能
-        document.querySelectorAll('.minimize').forEach(function(button) {
-            button.addEventListener('click', function() {
-                var window = this.closest('.window');
-                window.style.display = 'none';
-            });
-        });
-
-        document.querySelectorAll('.maximize').forEach(function(button) {
-            button.addEventListener('click', function() {
-                var window = this.closest('.window');
-                if (window.style.width === '100%' && window.style.height === '100%') {
-                    window.style.width = '300px';
-                    window.style.height = '200px';
+        document.addEventListener('DOMContentLoaded', function() {
+            // スタートボタンのクリックでスタートメニューの表示・非表示を切り替え
+            document.getElementById('start-btn').addEventListener('click', function() {
+                var menu = document.getElementById('start-menu');
+                if (menu.style.display === 'none' || menu.style.display === '') {
+                    menu.style.display = 'block';
                 } else {
-                    window.style.width = '100%';
-                    window.style.height = '100%';
+                    menu.style.display = 'none';
                 }
             });
-        });
 
-        document.querySelectorAll('.close').forEach(function(button) {
-            button.addEventListener('click', function() {
-                var window = this.closest('.window');
-                window.style.display = 'none';
+            // スタートメニューの項目をクリックすると対応するウィンドウを表示
+            document.querySelectorAll('#start-menu ul li').forEach(function(item) {
+                item.addEventListener('click', function() {
+                    var targetId = item.getAttribute('data-target');
+                    var targetWindow = document.getElementById(targetId);
+                    if (targetWindow) {
+                        targetWindow.style.display = 'block';
+                    }
+                });
             });
-        });
 
-        // 言語切替ボタンの機能
-        document.getElementById('lang-toggle').addEventListener('click', function() {
-            alert('言語切替機能はまだ実装されていません。');
-        });
+            // 解除ボタンがクリックされたとき
+            document.getElementById('unlock-btn').addEventListener('click', function() {
+                document.getElementById('lock-screen').classList.add('hidden');
+                document.getElementById('desktop').classList.remove('hidden');
+                document.getElementById('startup-sound').play();
+            });
 
-        // バージョン情報ボタンの機能
-        document.getElementById('version-info').addEventListener('click', function() {
-            alert('Windows Newaxis ©1979-2533');
-        });
+            // ウィンドウをドラッグ可能にする
+            document.querySelectorAll('.window').forEach(function(window) {
+                let titleBar = window.querySelector('.title-bar');
+                titleBar.onmousedown = function(e) {
+                    let offsetX = e.clientX - window.getBoundingClientRect().left;
+                    let offsetY = e.clientY - window.getBoundingClientRect().top;
 
-        // YouTubeボタンの機能
-        document.getElementById('youtube-btn').addEventListener('click', function() {
-            window.open('https://www.youtube.com', '_blank');
+                    function onMouseMove(e) {
+                        window.style.left = (e.clientX - offsetX) + 'px';
+                        window.style.top = (e.clientY - offsetY) + 'px';
+                    }
+
+                    function onMouseUp() {
+                        document.removeEventListener('mousemove', onMouseMove);
+                        document.removeEventListener('mouseup', onMouseUp);
+                    }
+
+                    document.addEventListener('mousemove', onMouseMove);
+                    document.addEventListener('mouseup', onMouseUp);
+                };
+            });
+
+            // ウィンドウの最小化、最大化、閉じる機能
+            document.querySelectorAll('.minimize').forEach(function(button) {
+                button.addEventListener('click', function() {
+                    var window = this.closest('.window');
+                    window.style.display = 'none';
+                });
+            });
+
+            document.querySelectorAll('.maximize').forEach(function(button) {
+                button.addEventListener('click', function() {
+                    var window = this.closest('.window');
+                    if (window.style.width === '100%' && window.style.height === '100%') {
+                        window.style.width = '300px';
+                        window.style.height = '200px';
+                    } else {
+                        window.style.width = '100%';
+                        window.style.height = '100%';
+                    }
+                });
+            });
+
+            document.querySelectorAll('.close').forEach(function(button) {
+                button.addEventListener('click', function() {
+                    var window = this.closest('.window');
+                    window.style.display = 'none';
+                });
+            });
+
+            // 言語切替ボタンの機能
+            document.getElementById('lang-toggle').addEventListener('click', function() {
+                alert('言語切替機能はまだ実装されていません。');
+            });
+
+            // バージョン情報ボタンの機能
+            document.getElementById('version-info').addEventListener('click', function() {
+                alert('Windows Newaxis バージョン 1.0');
+            });
+
+            // YouTubeボタンの機能
+            document.getElementById('youtube-btn').addEventListener('click', function() {
+                window.open('https://www.youtube.com', '_blank');
+            });
         });
     </script>
 </body>
