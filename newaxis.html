@@ -25,7 +25,6 @@
             background-color: rgba(0, 0, 0, 0.7);
             color: white;
             text-align: center;
-            z-index: 1000; /* 最前面 */
         }
 
         .hidden {
@@ -35,68 +34,61 @@
         #taskbar {
             position: absolute;
             bottom: 0;
-            width: 100%;
-            height: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 80px;
             background-color: black;
             color: white;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
             padding: 0 10px;
-            z-index: 100; /* スタートメニューの下 */
+            border-top: 2px solid white;
+            z-index: 1000; /* Ensure taskbar is on top */
+        }
+
+        #taskbar img {
+            width: 80px;
+            height: 80px;
+            cursor: pointer;
+            margin: 0 5px;
         }
 
         #start-btn {
+            width: 80px;
+            height: 80px;
+            background: url('majaurstart.png') no-repeat center center;
+            background-size: contain;
             cursor: pointer;
-            background-image: url('majaurstart.png');
-            width: 40px;
-            height: 40px;
-            background-size: cover;
-            position: relative;
-        }
-
-        #start-btn::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 60px;
-            height: 60px;
-            background-color: black;
-            border: 2px solid white;
-            transform: translate(-50%, -50%) rotate(45deg);
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
         }
 
         #start-menu {
             position: absolute;
+            top: 80px;
             left: 50%;
-            bottom: 40px; /* タスクバーの上に表示 */
             transform: translateX(-50%);
-            width: 250px;
-            background-color: black;
-            border: 2px solid white;
-            border-radius: 10px;
+            width: 200px;
+            background: white;
+            border: 1px solid #ccc;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-            display: none; /* 初期状態では非表示 */
-            z-index: 500; /* ウィンドウの上 */
+            z-index: 1000; /* Ensure menu is on top */
+            display: none;
         }
 
         #start-menu ul {
             list-style: none;
-            padding: 10px;
             margin: 0;
+            padding: 0;
         }
 
         #start-menu ul li {
             padding: 10px;
-            color: white;
             cursor: pointer;
         }
 
         #start-menu ul li:hover {
-            background-color: #333;
+            background-color: #f0f0f0;
         }
 
         .window {
@@ -109,8 +101,7 @@
             resize: both;
             overflow: auto;
             border-radius: 10px;
-            backdrop-filter: blur(10px);
-            z-index: 200; /* スタートメニューの下 */
+            z-index: 1000; /* Ensure windows are on top */
         }
 
         .title-bar {
@@ -128,35 +119,43 @@
         }
 
         .window-controls button {
+            background: linear-gradient(145deg, #ddd, #ccc);
             border: none;
-            color: white;
+            color: #333;
             font-size: 14px;
             width: 30px;
             height: 30px;
             border-radius: 5px;
             margin: 0 2px;
             cursor: pointer;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
             transition: background 0.3s ease;
         }
 
-        .minimize {
-            background: linear-gradient(145deg, #10a500, #80b87a);
-        }
-
-        .maximize {
-            background: linear-gradient(145deg, #eace2a, #fff3ac);
-        }
-
-        .close {
-            background: linear-gradient(145deg, #ff3300, #ffbcac);
-        }
-
         .window-controls button:hover {
-            opacity: 0.8;
+            background: linear-gradient(145deg, #ccc, #ddd);
         }
 
         .window-controls button:active {
-            opacity: 0.6;
+            background: linear-gradient(145deg, #bbb, #ddd);
+        }
+
+        iframe {
+            width: 100%;
+            height: calc(100% - 30px);
+            border: none;
+        }
+
+        #lang-toggle, #version-info, #youtube-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        #lang-toggle:hover, #version-info:hover, #youtube-btn:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -168,23 +167,20 @@
     <div id="desktop" class="hidden">
         <div id="taskbar">
             <div id="start-btn"></div>
-            <div id="start-menu">
-                <ul>
-                    <li data-target="browser">Bing</li>
-                    <li data-target="paint">Paint</li>
-                    <li data-target="migdal">Migdal</li>
-                    <li data-target="calc">Calc</li>
-                    <li data-target="notepad">Notepad</li>
-                    <li data-target="cmd">Command Prompt</li>
-                </ul>
-            </div>
-            <div id="taskbar-items">
-                <button id="lang-toggle">日本語</button>
-                <button id="version-info">バージョン情報</button>
-                <button id="youtube-btn">YouTube</button>
-            </div>
+            <img src="newaxis/paint.png" id="paint-icon" alt="Paint" onclick="openApp('paint')">
+            <img src="newaxis/bing.png" id="browser-icon" alt="Bing" onclick="openApp('browser')">
         </div>
-        <div class="window" id="browser">
+        <div id="start-menu">
+            <ul>
+                <li onclick="openApp('paint')">Paint</li>
+                <li onclick="openApp('browser')">Bing</li>
+                <li onclick="openApp('calc')">Calc</li>
+                <li onclick="openApp('notepad')">Notepad</li>
+                <li onclick="openApp('cmd')">Command Prompt</li>
+                <li onclick="openApp('migdal')">Migdal</li>
+            </ul>
+        </div>
+        <div class="window" id="browser" style="display: none;">
             <div class="title-bar">
                 <span class="title">Bing</span>
                 <div class="window-controls">
@@ -195,7 +191,7 @@
             </div>
             <iframe src="https://www.bing.com" frameborder="0"></iframe>
         </div>
-        <div class="window" id="paint">
+        <div class="window" id="paint" style="display: none;">
             <div class="title-bar">
                 <span class="title">Paint</span>
                 <div class="window-controls">
@@ -206,7 +202,7 @@
             </div>
             <iframe src="https://sakalt.github.io/paint" frameborder="0"></iframe>
         </div>
-        <div class="window" id="migdal">
+        <div class="window" id="migdal" style="display: none;">
             <div class="title-bar">
                 <span class="title">Migdal</span>
                 <div class="window-controls">
@@ -217,7 +213,7 @@
             </div>
             <iframe src="https://migdal.jp" frameborder="0"></iframe>
         </div>
-        <div class="window" id="calc">
+        <div class="window" id="calc" style="display: none;">
             <div class="title-bar">
                 <span class="title">Calc</span>
                 <div class="window-controls">
@@ -228,7 +224,7 @@
             </div>
             <iframe src="data:text/html,<h1>Calc</h1>" frameborder="0"></iframe>
         </div>
-        <div class="window" id="notepad">
+        <div class="window" id="notepad" style="display: none;">
             <div class="title-bar">
                 <span class="title">Notepad</span>
                 <div class="window-controls">
@@ -239,7 +235,7 @@
             </div>
             <iframe src="data:text/html,<textarea style='width:100%;height:100%;'></textarea>" frameborder="0"></iframe>
         </div>
-        <div class="window" id="cmd">
+        <div class="window" id="cmd" style="display: none;">
             <div class="title-bar">
                 <span class="title">Command Prompt</span>
                 <div class="window-controls">
@@ -259,45 +255,29 @@
             document.getElementById('startup-sound').play();
         });
 
-        document.getElementById('start-btn').addEventListener('click', function() {
-            var menu = document.getElementById('start-menu');
-            if (menu.style.display === 'none' || menu.style.display === '') {
-                menu.style.display = 'block';
-            } else {
-                menu.style.display = 'none';
-            }
-        });
-
-        document.querySelectorAll('#start-menu ul li').forEach(function(item) {
-            item.addEventListener('click', function() {
-                var targetId = item.getAttribute('data-target');
-                document.querySelectorAll('.window').forEach(function(win) {
-                    win.style.display = 'none';
+        function openApp(appId) {
+            document.querySelectorAll('.window').forEach(win => win.style.display = 'none');
+            document.getElementById(appId).style.display = 'block';
+        }
+        
+        // Example to add drag and drop functionality
+        document.querySelectorAll('.window').forEach(windowElement => {
+            const titleBar = windowElement.querySelector('.title-bar');
+            titleBar.addEventListener('mousedown', (e) => {
+                const offsetX = e.clientX - windowElement.getBoundingClientRect().left;
+                const offsetY = e.clientY - windowElement.getBoundingClientRect().top;
+                function moveAt(pageX, pageY) {
+                    windowElement.style.left = pageX - offsetX + 'px';
+                    windowElement.style.top = pageY - offsetY + 'px';
+                }
+                moveAt(e.pageX, e.pageY);
+                function onMouseMove(e) {
+                    moveAt(e.pageX, e.pageY);
+                }
+                document.addEventListener('mousemove', onMouseMove);
+                document.addEventListener('mouseup', () => {
+                    document.removeEventListener('mousemove', onMouseMove);
                 });
-                document.getElementById(targetId).style.display = 'block';
-                document.getElementById('start-menu').style.display = 'none';
-            });
-        });
-
-        document.querySelectorAll('.window-controls .minimize').forEach(function(button) {
-            button.addEventListener('click', function() {
-                this.parentElement.parentElement.parentElement.style.display = 'none';
-            });
-        });
-
-        document.querySelectorAll('.window-controls .maximize').forEach(function(button) {
-            button.addEventListener('click', function() {
-                var window = this.parentElement.parentElement.parentElement;
-                window.style.width = '100%';
-                window.style.height = '100%';
-                window.style.top = '0';
-                window.style.left = '0';
-            });
-        });
-
-        document.querySelectorAll('.window-controls .close').forEach(function(button) {
-            button.addEventListener('click', function() {
-                this.parentElement.parentElement.parentElement.style.display = 'none';
             });
         });
     </script>
