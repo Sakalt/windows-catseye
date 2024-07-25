@@ -168,10 +168,26 @@
             padding: 10px;
             box-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
         }
+
+        textarea {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: rgba(0, 0, 0, 0.9);
+            color: #00ff00;
+            font-family: 'Courier New', Courier, monospace;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        #memory-monitor-content {
+            padding: 10px;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
-    <audio id="startup-sound" src="cc9b71e3-e4aa-4e73-9397-906b6decr724.webm" preload="auto"></audio>
+    <audio id="startup-sound" src="cc9b71e3-e4aa-4e73-9397-906b6dece724.webm" preload="auto"></audio>
 
     <div id="start-button"></div>
     <div class="divider"></div>
@@ -226,7 +242,7 @@
                 <button class="close" onclick="closeWindow('dictionary')">X</button>
             </div>
         </div>
-        <iframe src="https://amuhiku.netlify.app" frameborder="0" style="width:100%;height:calc(100% - 30px);"></iframe>
+        <iframe src="https://dictionary.com" frameborder="0" style="width:100%;height:calc(100% - 30px);"></iframe>
     </div>
 
     <div class="window" id="browser">
@@ -238,21 +254,9 @@
                 <button class="close" onclick="closeWindow('browser')">X</button>
             </div>
         </div>
-        <iframe src="https://www.bing.com" frameborder="0" style="width:100%;height:calc(100% - 30px);"></iframe>
+        <iframe src="https://www.google.com" frameborder="0" style="width:100%;height:calc(100% - 30px);"></iframe>
     </div>
-    
-    <div class="window" id="calc">
-        <div class="title-bar" onmousedown="startDrag(event, 'calc')">
-            <span class="title">calc</span>
-            <div class="window-controls">
-                <button class="minimize" onclick="minimizeWindow('calc')">_</button>
-                <button class="maximize" onclick="maximizeWindow('calc')">[]</button>
-                <button class="close" onclick="closeWindow('calc')">X</button>
-            </div>
-        </div>
-        <iframe src="https://sakalt.github.io/calc" frameborder="0" style="width:100%;height:calc(100% - 30px);"></iframe>
-    </div>
-    
+
     <div class="window" id="paint">
         <div class="title-bar" onmousedown="startDrag(event, 'paint')">
             <span class="title">Paint</span>
@@ -262,43 +266,19 @@
                 <button class="close" onclick="closeWindow('paint')">X</button>
             </div>
         </div>
-        <iframe src="https://jspaint.app" frameborder="0" style="width:100%;height:calc(100% - 30px);"></iframe>
-    </div>
-
-    <div class="window" id="notepad">
-        <div class="title-bar" onmousedown="startDrag(event, 'notepad')">
-            <span class="title">Notepad</span>
-            <div class="window-controls">
-                <button class="minimize" onclick="minimizeWindow('notepad')">_</button>
-                <button class="maximize" onclick="maximizeWindow('notepad')">[]</button>
-                <button class="close" onclick="closeWindow('notepad')">X</button>
-            </div>
-        </div>
-        <iframe src="https://editpad.org" frameborder="0" style="width:100%;height:calc(100% - 30px);"></iframe>
+        <iframe src="https://paint.js.org" frameborder="0" style="width:100%;height:calc(100% - 30px);"></iframe>
     </div>
 
     <div class="window" id="migdal">
         <div class="title-bar" onmousedown="startDrag(event, 'migdal')">
-            <span class="title">migdal</span>
+            <span class="title">Migdal</span>
             <div class="window-controls">
                 <button class="minimize" onclick="minimizeWindow('migdal')">_</button>
                 <button class="maximize" onclick="maximizeWindow('migdal')">[]</button>
                 <button class="close" onclick="closeWindow('migdal')">X</button>
             </div>
         </div>
-        <iframe src="https://v6p9d9t4.ssl.hwcdn.net/html/6140406/migdal_v1.5/index.html" frameborder="0" style="width:100%;height:calc(100% - 30px);"></iframe>
-    </div>
-
-    <div class="window" id="memory-monitor">
-        <div class="title-bar" onmousedown="startDrag(event, 'memory-monitor')">
-            <span class="title">メモリモニタリング</span>
-            <div class="window-controls">
-                <button class="minimize" onclick="minimizeWindow('memory-monitor')">_</button>
-                <button class="maximize" onclick="maximizeWindow('memory-monitor')">[]</button>
-                <button class="close" onclick="closeWindow('memory-monitor')">X</button>
-            </div>
-        </div>
-        <iframe src="about:blank" frameborder="0" style="width:100%;height:calc(100% - 30px);"></iframe>
+        <iframe src="https://migdal.org" frameborder="0" style="width:100%;height:calc(100% - 30px);"></iframe>
     </div>
 
     <div class="window" id="timer">
@@ -310,7 +290,7 @@
                 <button class="close" onclick="closeWindow('timer')">X</button>
             </div>
         </div>
-        <iframe src="about:blank" frameborder="0" style="width:100%;height:calc(100% - 30px);"></iframe>
+        <!-- タイマーのコンテンツをここに追加 -->
     </div>
 
     <div class="window" id="weather">
@@ -322,137 +302,134 @@
                 <button class="close" onclick="closeWindow('weather')">X</button>
             </div>
         </div>
-        <iframe src="https://www.weather.com" frameborder="0" style="width:100%;height:calc(100% - 30px);"></iframe>
+        <!-- 天気予報のコンテンツをここに追加 -->
     </div>
 
-    <div id="window-list"></div>
+    <div class="window" id="calc">
+        <div class="title-bar" onmousedown="startDrag(event, 'calc')">
+            <span class="title">電卓</span>
+            <div class="window-controls">
+                <button class="minimize" onclick="minimizeWindow('calc')">_</button>
+                <button class="maximize" onclick="maximizeWindow('calc')">[]</button>
+                <button class="close" onclick="closeWindow('calc')">X</button>
+            </div>
+        </div>
+        <iframe src="https://sakalt.github.io/calc" frameborder="0" style="width:100%;height:calc(100% - 30px);"></iframe>
+    </div>
+
+    <div class="window" id="notepad">
+        <div class="title-bar" onmousedown="startDrag(event, 'notepad')">
+            <span class="title">Notepad</span>
+            <div class="window-controls">
+                <button class="minimize" onclick="minimizeWindow('notepad')">_</button>
+                <button class="maximize" onclick="maximizeWindow('notepad')">[]</button>
+                <button class="close" onclick="closeWindow('notepad')">X</button>
+            </div>
+        </div>
+        <textarea placeholder="ここにメモを入力..."></textarea>
+    </div>
+
+    <div class="window" id="memory-monitor">
+        <div class="title-bar" onmousedown="startDrag(event, 'memory-monitor')">
+            <span class="title">メモリモニタリング</span>
+            <div class="window-controls">
+                <button class="minimize" onclick="minimizeWindow('memory-monitor')">_</button>
+                <button class="maximize" onclick="maximizeWindow('memory-monitor')">[]</button>
+                <button class="close" onclick="closeWindow('memory-monitor')">X</button>
+            </div>
+        </div>
+        <div id="memory-monitor-content">
+            <p><strong>メモリ情報:</strong></p>
+            <p id="memory-info">読み込み中...</p>
+        </div>
+    </div>
 
     <script>
-        const startButton = document.getElementById('start-button');
-        const startMenu = document.getElementById('start-menu');
-        const controlPanel = document.getElementById('control-panel');
-        const windows = document.querySelectorAll('.window');
-        const windowList = document.getElementById('window-list');
-        let activeWindows = [];
-
-        startButton.addEventListener('click', () => {
-            startMenu.style.display = startMenu.style.display === 'none' ? 'block' : 'none';
+        document.getElementById('start-button').addEventListener('click', function() {
+            var startMenu = document.getElementById('start-menu');
+            startMenu.style.display = startMenu.style.display === 'none' || startMenu.style.display === '' ? 'block' : 'none';
         });
 
         function showWindow(windowId) {
-            const windowElement = document.getElementById(windowId);
-            if (windowElement) {
-                windowElement.style.display = 'block';
-                bringToFront(windowElement);
-                if (!activeWindows.includes(windowId)) {
-                    activeWindows.push(windowId);
-                    updateWindowList();
+            var windows = document.querySelectorAll('.window');
+            windows.forEach(function(win) {
+                if (win.id === windowId) {
+                    win.style.display = 'block';
+                } else {
+                    win.style.display = 'none';
                 }
+            });
+        }
+
+        function startDrag(e, windowId) {
+            var windowElem = document.getElementById(windowId);
+            var offsetX = e.clientX - windowElem.getBoundingClientRect().left;
+            var offsetY = e.clientY - windowElem.getBoundingClientRect().top;
+
+            function dragMove(event) {
+                windowElem.style.left = (event.clientX - offsetX) + 'px';
+                windowElem.style.top = (event.clientY - offsetY) + 'px';
+            }
+
+            function dragEnd() {
+                document.removeEventListener('mousemove', dragMove);
+                document.removeEventListener('mouseup', dragEnd);
+            }
+
+            document.addEventListener('mousemove', dragMove);
+            document.addEventListener('mouseup', dragEnd);
+        }
+
+        function minimizeWindow(windowId) {
+            document.getElementById(windowId).style.display = 'none';
+        }
+
+        function maximizeWindow(windowId) {
+            var windowElem = document.getElementById(windowId);
+            if (windowElem.style.width === '100%' && windowElem.style.height === '100%') {
+                windowElem.style.width = '300px';
+                windowElem.style.height = '200px';
+            } else {
+                windowElem.style.width = '100%';
+                windowElem.style.height = '100%';
             }
         }
 
         function closeWindow(windowId) {
-            const windowElement = document.getElementById(windowId);
-            if (windowElement) {
-                windowElement.style.display = 'none';
-                activeWindows = activeWindows.filter(id => id !== windowId);
-                updateWindowList();
-            }
-        }
-
-        function minimizeWindow(windowId) {
-            const windowElement = document.getElementById(windowId);
-            if (windowElement) {
-                windowElement.style.display = 'none';
-                updateWindowList();
-            }
-        }
-
-        function maximizeWindow(windowId) {
-            const windowElement = document.getElementById(windowId);
-            if (windowElement) {
-                if (windowElement.classList.contains('maximized')) {
-                    windowElement.classList.remove('maximized');
-                    windowElement.style.width = '300px';
-                    windowElement.style.height = '200px';
-                } else {
-                    windowElement.classList.add('maximized');
-                    windowElement.style.width = '100%';
-                    windowElement.style.height = 'calc(100% - 30px)';
-                }
-                bringToFront(windowElement);
-            }
-        }
-
-        function updateWindowList() {
-            windowList.innerHTML = '';
-            activeWindows.forEach(windowId => {
-                const listItem = document.createElement('div');
-                listItem.className = 'window-list-item';
-                listItem.innerText = windowId;
-                listItem.addEventListener('click', () => {
-                    showWindow(windowId);
-                    bringToFront(document.getElementById(windowId));
-                });
-                windowList.appendChild(listItem);
-            });
-        }
-
-        function bringToFront(windowElement) {
-            windows.forEach(win => {
-                win.style.zIndex = '1000';
-            });
-            windowElement.style.zIndex = '1001';
-        }
-
-        let dragOffsetX, dragOffsetY, draggedWindow;
-
-        function startDrag(event, windowId) {
-            draggedWindow = document.getElementById(windowId);
-            dragOffsetX = event.clientX - draggedWindow.getBoundingClientRect().left;
-            dragOffsetY = event.clientY - draggedWindow.getBoundingClientRect().top;
-            document.addEventListener('mousemove', onDrag);
-            document.addEventListener('mouseup', stopDrag);
-        }
-
-        function onDrag(event) {
-            if (draggedWindow) {
-                draggedWindow.style.left = `${event.clientX - dragOffsetX}px`;
-                draggedWindow.style.top = `${event.clientY - dragOffsetY}px`;
-            }
-        }
-
-        function stopDrag() {
-            document.removeEventListener('mousemove', onDrag);
-            document.removeEventListener('mouseup', stopDrag);
-            draggedWindow = null;
+            document.getElementById(windowId).style.display = 'none';
         }
 
         function applyChanges() {
-            const backgroundColor = document.getElementById('background-color').value;
-            const textColor = document.getElementById('text-color').value;
-            const brightness = document.getElementById('brightness').value;
-            const language = document.getElementById('language').value;
+            var backgroundColor = document.getElementById('background-color').value;
+            var textColor = document.getElementById('text-color').value;
+            var brightness = document.getElementById('brightness').value;
+            var language = document.getElementById('language').value;
 
             document.body.style.backgroundColor = backgroundColor;
             document.body.style.color = textColor;
-            document.body.style.filter = `brightness(${brightness}%)`;
 
-            // 言語設定の反映（日本語、英語、ベトナム語）
-            const startMenuItems = {
-                'ja': ['ブラウザ', 'Paint', 'Migdal', 'Calc', 'Notepad', 'Dictionary', 'メモリモニタリング', 'タイマー', '天気予報', 'コントロールパネル'],
-                'en': ['Browser', 'Paint', 'Migdal', 'Calc', 'Notepad', 'Dictionary', 'Memory Monitoring', 'Timer', 'Weather', 'Control Panel'],
-                'vi': ['Trình duyệt', 'Paint', 'Migdal', 'Calc', 'Notepad', 'Dictionary', 'Giám sát bộ nhớ', 'Hẹn giờ', 'Dự báo thời tiết', 'Bảng điều khiển']
-            };
-            const items = startMenuItems[language];
-            const ul = startMenu.querySelector('ul');
-            ul.innerHTML = '';
-            items.forEach((item, index) => {
-                const li = document.createElement('li');
-                li.innerText = item;
-                li.setAttribute('onclick', `showWindow('${items[index].toLowerCase().replace(/ /g, '-')})`);
-                ul.appendChild(li);
-            });
+            // Adjust brightness (optional implementation)
+            document.body.style.filter = 'brightness(' + brightness + '%)';
+
+            alert('設定が適用されました。\n言語: ' + language);
+        }
+
+        // Start the startup sound
+        window.onload = function() {
+            document.getElementById('startup-sound').play();
+            updateMemoryInfo(); // Update memory info when the page loads
+        };
+
+        function updateMemoryInfo() {
+            if (navigator.memory) {
+                // Web performance API is available
+                const memoryInfo = navigator.memory;
+                document.getElementById('memory-info').innerText = `Total: ${Math.round(memoryInfo.totalJSHeapSize / 1024 / 1024)} MB\n` +
+                                                                   `Used: ${Math.round(memoryInfo.usedJSHeapSize / 1024 / 1024)} MB\n` +
+                                                                   `Free: ${Math.round(memoryInfo.jsHeapSizeLimit / 1024 / 1024)} MB`;
+            } else {
+                document.getElementById('memory-info').innerText = 'メモリ情報はこのブラウザではサポートされていません。';
+            }
         }
     </script>
 </body>
