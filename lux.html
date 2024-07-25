@@ -187,7 +187,7 @@
             <li onclick="showWindow('memory-monitor')">メモリモニタリング</li>
             <li onclick="showWindow('timer')">タイマー</li>
             <li onclick="showWindow('weather')">天気予報</li>
-            <li onclick="showControlPanel()">コントロールパネル</li>
+            <li onclick="showWindow('control-panel)">コントロールパネル</li>
         </ul>
     </div>
 
@@ -217,9 +217,9 @@
         <!-- ここにウィジェットを追加 -->
     </div>
 
-    <div class="window" id="browser">
+    <div class="window" id="dictionary">
         <div class="title-bar" onmousedown="startDrag(event, 'browser')">
-            <span class="title">ブラウザ</span>
+            <span class="title">辞書</span>
             <div class="window-controls">
                 <button class="minimize" onclick="minimizeWindow('browser')">_</button>
                 <button class="maximize" onclick="maximizeWindow('browser')">[]</button>
@@ -227,6 +227,30 @@
             </div>
         </div>
         <iframe src="https://amuhiku.netlify.app" frameborder="0" style="width:100%;height:calc(100% - 30px);"></iframe>
+    </div>
+
+    <div class="window" id="calc">
+        <div class="title-bar" onmousedown="startDrag(event, 'browser')">
+            <span class="title">辞書</span>
+            <div class="window-controls">
+                <button class="minimize" onclick="minimizeWindow('browser')">_</button>
+                <button class="maximize" onclick="maximizeWindow('browser')">[]</button>
+                <button class="close" onclick="closeWindow('browser')">X</button>
+            </div>
+        </div>
+        <iframe src="https://amuhiku.netlify.app" frameborder="0" style="width:100%;height:calc(100% - 30px);"></iframe>
+    </div>
+    
+    <div class="window" id="calc">
+        <div class="title-bar" onmousedown="startDrag(event, 'browser')">
+            <span class="title">calc</span>
+            <div class="window-controls">
+                <button class="minimize" onclick="minimizeWindow('browser')">_</button>
+                <button class="maximize" onclick="maximizeWindow('browser')">[]</button>
+                <button class="close" onclick="closeWindow('browser')">X</button>
+            </div>
+        </div>
+        <iframe src="https://sakalt.github.io/calc" frameborder="0" style="width:100%;height:calc(100% - 30px);"></iframe>
     </div>
 
     <div class="window" id="paint">
