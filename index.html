@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Windows Majaur</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: url('catseye-nebula.jpg') no-repeat center center fixed;
+            background-size: cover;
+            overflow: hidden;
+        }
+        #desktop {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        #taskbar {
+            width: 100%;
+            height: 40px;
+            background-color: #333;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 10px;
+            box-sizing: border-box;
+        }
+        #start-button {
+            height: 30px;
+            cursor: pointer;
+        }
+        #app-icons {
+            display: flex;
+            gap: 10px;
+        }
+        .app-icon {
+            width: 30px;
+            height: 30px;
+            background-color: white;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .window {
+            width: 600px;
+            height: 400px;
+            background-color: white;
+            border: 1px solid #333;
+            position: absolute;
+            top: 50px;
+            left: 50px;
+            display: none;
+            flex-direction: column;
+        }
+        .window-header {
+            width: 100%;
+            height: 30px;
+            background-color: #444;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 10px;
+            box-sizing: border-box;
+            cursor: move;
+        }
+        .window-body {
+            flex-grow: 1;
+            padding: 10px;
+        }
+        .window-controls {
+            display: flex;
+            gap: 5px;
+        }
+        .window-controls div {
+            width: 15px;
+            height: 15px;
+            background-color: #888;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+        #start-menu {
+            display: none;
+            position: absolute;
+            bottom: 40px;
+            left: 10px;
+            width: 200px;
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        #start-menu div {
+            padding: 5px 0;
+            cursor: pointer;
+        }
+        #start-menu div:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div id="desktop">
+        <div id="taskbar">
+            <img src="majaurstart.png" alt="スタート" id="start-button">
+            <div id="app-icons">
+                <div class="app-icon" onclick="openWindow('notepad-karikyok')">Notepad</div>
+                <div class="app-icon" onclick="openWindow('calc-kalkkyen')">Calc</div>
+                <div class="app-icon" onclick="openWindow('bing-bing')">Bing</div>
+                <div class="app-icon" onclick="openWindow('paint-peinta')">Paint</div>
+                <div class="app-icon" onclick="openWindow('texa')">Text</div>
+            </div>
+        </div>
+        <div id="start-menu">
+            <div onclick="openWindow('notepad-karikyok')">Notepad</div>
+            <div onclick="openWindow('calc-kalkkyen')">Calc</div>
+            <div onclick="openWindow('bing-bing')">Bing</div>
+            <div onclick="openWindow('paint-peinta')">Paint</div>
+            <div onclick="openWindow('texa')">Text</div>
+        </div>
+        <div class="window" id="notepad-karikyok">
+            <div class="window-header" onmousedown="dragMouseDown(event, 'notepad-karikyok')">
+                <span>Notepad</span>
+                <div class="window-controls">
+                    <div onclick="minimizeWindow('notepad-karikyok')">-</div>
+                    <div onclick="maximizeWindow('notepad-karikyok')">[ ]</div>
+                    <div onclick="closeWindow('notepad-karikyok')">×</div>
+                </div>
+            </div>
+            <div class="window-body">
+                <textarea style="width: 100%; height: 100%;"></textarea>
+            </div>
+        </div>
+        <div class="window" id="calc-kalkkyen">
+            <div class="window-header" onmousedown="dragMouseDown(event, 'calc-kalkkyen')">
+                <span>Calc</span>
+                <div class="window-controls">
+                    <div onclick="minimizeWindow('calc-kalkkyen')">-</div>
+                    <div onclick="maximizeWindow('calc-kalkkyen')">[ ]</div>
+                    <div onclick="closeWindow('calc-kalkkyen')">×</div>
+                </div>
+            </div>
+            <div class="window-body">
+                <iframe src="https://www.online-calculator.com/simple/" style="width: 100%; height: 100%; border: none;"></iframe>
+            </div>
+        </div>
+        <div class="window" id="bing-bing">
+            <div class="window-header" onmousedown="dragMouseDown(event, 'bing-bing')">
+                <span>Bing</span>
+                <div class="window-controls">
+                    <div onclick="minimizeWindow('bing-bing')">-</div>
+                    <div onclick="maximizeWindow('bing-bing')">[ ]</div>
+                    <div onclick="closeWindow('bing-bing')">×</div>
+                </div>
+            </div>
+            <div class="window-body">
+                <iframe src="https://www.bing.com" style="width: 100%; height: 100%; border: none;"></iframe>
+            </div>
+        </div>
+        <div class="window" id="paint-peinta">
+            <div class="window-header" onmousedown="dragMouseDown(event, 'paint-peinta')">
+                <span>Paint</span>
+                <div class="window-controls">
+                    <div onclick="minimizeWindow('paint-peinta')">-</div>
+                    <div onclick="maximizeWindow('paint-peinta')">[ ]</div>
+                    <div onclick="closeWindow('paint-peinta')">×</div>
+                </div>
+            </div>
+            <div class="window-body">
+                <iframe src="https://sakalt.github.io/paint" style="width: 100%; height: 100%; border: none;"></iframe>
+            </div>
+        </div>
+        <div class="window" id="texa">
+            <div class="window-header" onmousedown="dragMouseDown(event, 'texa')">
+                <span>Text Editor</span>
+                <div class="window-controls">
+                    <div onclick="minimizeWindow('texa')">-</div>
+                    <div onclick="maximizeWindow('texa')">[ ]</div>
+                    <div onclick="closeWindow('texa')">×</div>
+                </div>
+            </div>
+            <div class="window-body">
+                <textarea style="width: 100%; height: 100%;"></textarea>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.getElementById('start-button').addEventListener('click', () => {
+            const startMenu = document.getElementById('start-menu');
+            startMenu.style.display = startMenu.style.display === 'none' ? 'block' : 'none';
+        });
+
+        function openWindow(id) {
+            const win = document.getElementById(id);
+            win.style.display = 'flex';
+            localStorage.setItem(id, 'open');
+        }
+
+        function closeWindow(id) {
+            const win = document.getElementById(id);
+            win.style.display = 'none';
+            localStorage.setItem(id, 'closed');
+        }
+
+        function minimizeWindow(id) {
+            const win = document.getElementById(id);
+            win.style.display = 'none';
+        }
+
+        function maximizeWindow(id) {
+            const win = document.getElementById(id);
+            if (win.style.width === '100vw') {
+                win.style.width = '600px';
+                win.style.height = '400px';
+                win.style.top = '50px';
+                win.style.left = '50px';
+            } else {
+                win.style.width = '100vw';
+                win.style.height = '100vh';
+                win.style.top = '0';
+                win.style.left = '0';
+            }
+        }
+
+        function dragMouseDown(e, id) {
+            e.preventDefault();
+            document.onmouseup = closeDragElement;
+            document.onmousemove = elementDrag;
+            const win = document.getElementById(id);
+            let pos1 = 0, pos2 = 0, pos3 = e.clientX, pos4 = e.clientY;
+            
+            function elementDrag(e) {
+                e.preventDefault();
+                pos1 = pos3 - e.clientX;
+                pos2 = pos4 - e.clientY;
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                win.style.top = (win.offsetTop - pos2) + "px";
+                win.style.left = (win.offsetLeft - pos1) + "px";
+            }
+
+            function closeDragElement() {
+                document.onmouseup = null;
+                document.onmousemove = null;
+            }
+        }
+
+        window.onload = () => {
+            const apps = ['notepad-karikyok', 'calc-kalkkyen', 'bing-bing', 'paint-peinta', 'texa'];
+            apps.forEach(app => {
+                if (localStorage.getItem(app) === 'open') {
+                    openWindow(app);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
