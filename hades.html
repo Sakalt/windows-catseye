@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hades</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background: url('simple_background.png') no-repeat center center fixed;
+            background-size: cover;
+            color: #333;
+        }
+
+        #start-button {
+            cursor: pointer;
+            background-image: url('start_icon.png');
+            width: 40px;
+            height: 40px;
+            background-size: cover;
+            position: absolute;
+            bottom: 20px;
+            left: 10px;
+        }
+
+        #start-menu {
+            position: absolute;
+            left: 10px;
+            bottom: 70px;
+            width: 250px;
+            background-color: #f0f0f0;
+            color: #333;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+            display: none;
+            z-index: 1000;
+        }
+
+        #start-menu ul {
+            list-style: none;
+            padding: 10px;
+            margin: 0;
+        }
+
+        #start-menu ul li {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        #start-menu ul li:hover {
+            background-color: #ddd;
+        }
+
+        .window {
+            position: absolute;
+            width: 300px;
+            height: 200px;
+            background: #fff;
+            border: 1px solid #ddd;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+            z-index: 1000;
+            display: none;
+        }
+
+        .title-bar {
+            background: #f0f0f0;
+            color: #333;
+            padding: 5px;
+            cursor: move;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .window-controls {
+            display: flex;
+        }
+
+        .window-controls button {
+            border: none;
+            color: #333;
+            font-size: 14px;
+            width: 30px;
+            height: 30px;
+            border-radius: 5px;
+            margin: 0 2px;
+            cursor: pointer;
+            background: #ddd;
+            transition: background 0.3s ease;
+        }
+
+        .window-controls button:hover {
+            background: #ccc;
+        }
+
+        .window-controls button:active {
+            background: #bbb;
+        }
+
+        #taskbar {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 40px;
+            background-color: #f0f0f0;
+            color: #333;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 0 10px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+        }
+
+        #taskbar .task-item {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        #taskbar .task-item.active {
+            background-color: #ddd;
+        }
+
+        #control-panel {
+            display: none;
+            position: absolute;
+            top: 50px;
+            left: 50px;
+            width: 300px;
+            height: 200px;
+            background: #fff;
+            border: 1px solid #ddd;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+            z-index: 1000;
+            padding: 10px;
+        }
+
+        #control-panel h2 {
+            margin-top: 0;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100%;
+            border: 1px solid #ddd;
+            background: #f9f9f9;
+            color: #333;
+            font-family: 'Arial', sans-serif;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        #memory-monitor-content {
+            padding: 10px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <audio id="startup-sound" src="cc9b71e3-e4aa-4e73-9397-906b6dece724.webm" preload="auto"></audio>
+
+    <div id="start-button"></div>
+
+    <div id="start-menu">
+        <ul>
+            <li onclick="showWindow('browser')">ブラウザ</li>
+            <li onclick="showWindow('paint')">Paint</li>
+            <li onclick="showWindow('note')">ノート</li>
+            <li onclick="showWindow('calendar')">カレンダー</li>
+            <li onclick="showWindow('weather')">天気予報</li>
+            <li onclick="showWindow('settings')">設定</li>
+        </ul>
+    </div>
+
+    <div id="control-panel">
+        <h2>設定</h2>
+        <label for="background-color">背景色:</label>
+        <input type="color" id="background-color" value="#ffffff">
+        
+        <label for="text-color">テキスト色:</label>
+        <input type="color" id="text-color" value="#333333">
+        
+        <button onclick="applyChanges()">変更を適用</button>
+    </div>
+
+    <div id="taskbar">
+        <div class="task-item" onclick="showWindow('note')">ノート</div>
+        <div class="task-item" onclick="showWindow('calendar')">カレンダー</div>
+        <div class="task-item" onclick="showWindow('weather')">天気予報</div>
+    </div>
+
+    <div class="window" id="browser">
+        <div class="title-bar">
+            <span>ブラウザ</span>
+            <div class="window-controls">
+                <button onclick="minimizeWindow('browser')">_</button>
+                <button onclick="maximizeWindow('browser')">□</button>
+                <button onclick="closeWindow('browser')">×</button>
+            </div>
+        </div>
+        <iframe src="https://www.bing.com" width="100%" height="100%" style="border: none;"></iframe>
+    </div>
+
+    <div class="window" id="paint">
+        <div class="title-bar">
+            <span>Paint</span>
+            <div class="window-controls">
+                <button onclick="minimizeWindow('paint')">_</button>
+                <button onclick="maximizeWindow('paint')">□</button>
+                <button onclick="closeWindow('paint')">×</button>
+            </div>
+        </div>
+        <div id="paintjs-container" style="width: 100%; height: 100%;"></div>
+    </div>
+
+    <div class="window" id="note">
+        <div class="title-bar">
+            <span>ノート</span>
+            <div class="window-controls">
+                <button onclick="minimizeWindow('note')">_</button>
+                <button onclick="maximizeWindow('note')">□</button>
+                <button onclick="closeWindow('note')">×</button>
+            </div>
+        </div>
+        <textarea></textarea>
+    </div>
+
+    <div class="window" id="calendar">
+        <div class="title-bar">
+            <span>カレンダー</span>
+            <div class="window-controls">
+                <button onclick="minimizeWindow('calendar')">_</button>
+                <button onclick="maximizeWindow('calendar')">□</button>
+                <button onclick="closeWindow('calendar')">×</button>
+            </div>
+        </div>
+        <iframe src="https://calendar.google.com" width="100%" height="100%" style="border: none;"></iframe>
+    </div>
+
+    <div class="window" id="weather">
+        <div class="title-bar">
+            <span>天気予報</span>
+            <div class="window-controls">
+                <button onclick="minimizeWindow('weather')">_</button>
+                <button onclick="maximizeWindow('weather')">□</button>
+                <button onclick="closeWindow('weather')">×</button>
+            </div>
+        </div>
+        <iframe src="https://weather.com" width="100%" height="100%" style="border: none;"></iframe>
+    </div>
+
+    <div class="window" id="settings">
+        <div class="title-bar">
+            <span>設定</span>
+            <div class="window-controls">
+                <button onclick="minimizeWindow('settings')">_</button>
+                <button onclick="maximizeWindow('settings')">□</button>
+                <button onclick="closeWindow('settings')">×</button>
+            </div>
+        </div>
+        <div id="control-panel-content">
+            <h2>設定</h2>
+            <label for="background-color">背景色:</label>
+            <input type="color" id="background-color" value="#ffffff">
+            
+            <label for="text-color">テキスト色:</label>
+            <input type="color" id="text-color" value="#333333">
+            
+            <button onclick="applyChanges()">変更を適用</button>
+        </div>
+    </div>
+
+    <script src="paint.js"></script>
+    <script>
+        document.getElementById('startup-sound').play();
+
+        function showWindow(id) {
+            document.querySelectorAll('.window').forEach(win => win.style.display = 'none');
+            document.getElementById(id).style.display = 'block';
+        }
+
+        function closeWindow(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        function minimizeWindow(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        function maximizeWindow(id) {
+            const win = document.getElementById(id);
+            win.style.width = '100%';
+            win.style.height = '100%';
+        }
+
+        function applyChanges() {
+            const backgroundColor = document.getElementById('background-color').value;
+            const textColor = document.getElementById('text-color').value;
+            document.body.style.backgroundColor = backgroundColor;
+            document.body.style.color = textColor;
+        }
+    </script>
+</body>
+</html>
