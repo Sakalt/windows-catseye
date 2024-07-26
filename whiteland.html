@@ -103,48 +103,28 @@
             background: #666;
         }
 
-        .tab-bar {
+        #window-list {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 40px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: #00ff00;
             display: flex;
             justify-content: flex-start;
             align-items: center;
-            background: #333;
-            padding: 5px;
-            border-bottom: 1px solid #00ff00;
+            padding: 0 10px;
+            box-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+            overflow-x: auto;
         }
 
-        .tab {
-            padding: 5px 10px;
-            cursor: pointer;
-            background: #1a1a1a;
-            color: #00ff00;
-            margin-right: 5px;
-            border-radius: 5px;
-        }
-
-        .tab.active {
-            background: #00ff00;
-            color: #1a1a1a;
-        }
-
-        .extension-market {
-            position: absolute;
-            top: 50px;
-            left: 50px;
-            width: 500px;
-            height: 400px;
-            background: rgba(0, 0, 0, 0.9);
-            border: 1px solid #00ff00;
-            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
-            border-radius: 5px;
-            z-index: 1000;
-            resize: both;
-            overflow: auto;
-            display: none;
-        }
-
-        .extension-market-content {
+        .window-list-item {
             padding: 10px;
-            color: #00ff00;
+            cursor: pointer;
+        }
+
+        .window-list-item.active {
+            background-color: #333;
         }
 
         #control-panel {
@@ -169,6 +149,26 @@
             color: #00ff00;
         }
 
+        .divider {
+            position: absolute;
+            bottom: 60px;
+            width: 100%;
+            height: 2px;
+            background-color: #00ff00;
+        }
+
+        #widgets {
+            position: absolute;
+            top: 50px;
+            right: 10px;
+            width: 200px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: #00ff00;
+            border-radius: 5px;
+            padding: 10px;
+            box-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+        }
+
         textarea {
             width: 100%;
             height: 100%;
@@ -183,6 +183,39 @@
         #memory-monitor-content {
             padding: 10px;
             font-size: 14px;
+        }
+
+        .tab {
+            display: inline-block;
+            padding: 5px 10px;
+            cursor: pointer;
+            border: 1px solid #00ff00;
+            border-radius: 5px 5px 0 0;
+            background: #1a1a1a;
+            color: #00ff00;
+        }
+
+        .tab.active {
+            background: #333;
+        }
+
+        .tab-container {
+            display: flex;
+            flex-wrap: nowrap;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        #paint-canvas {
+            width: 100%;
+            height: calc(100% - 30px);
+            border: 1px solid #00ff00;
         }
     </style>
 </head>
@@ -199,11 +232,11 @@
             <li onclick="showWindow('migdal')">Migdal</li>
             <li onclick="showWindow('calc')">Calc</li>
             <li onclick="showWindow('notepad')">Notepad</li>
+            <li onclick="showWindow('dictionary')">Dictionary</li>
             <li onclick="showWindow('memory-monitor')">メモリモニタリング</li>
             <li onclick="showWindow('timer')">タイマー</li>
             <li onclick="showWindow('weather')">天気予報</li>
             <li onclick="showWindow('control-panel')">コントロールパネル</li>
-            <li onclick="showWindow('extension-market')">拡張機能マーケット</li>
         </ul>
     </div>
 
@@ -228,18 +261,12 @@
         <button onclick="applyChanges()">変更を適用</button>
     </div>
 
-    <div class="window" id="dictionary">
-        <div class="title-bar" onmousedown="startDrag(event, 'dictionary')">
-            <span class="title">辞書</span>
-            <div class="window-controls">
-                <button class="minimize" onclick="minimizeWindow('dictionary')">_</button>
-                <button class="maximize" onclick="maximizeWindow('dictionary')">[]</button>
-                <button class="close" onclick="closeWindow('dictionary')">X</button>
-            </div>
-        </div>
-        <iframe src="https://amuhiku.netlify.app" frameborder="0" style="width:100%;height:calc(100% - 30px);"></iframe>
+    <div id="widgets">
+        <h3>ウィジェット</h3>
+        <!-- ここにウィジェットを追加 -->
     </div>
 
+    <!-- Browser Window with Tabs -->
     <div class="window" id="browser">
         <div class="title-bar" onmousedown="startDrag(event, 'browser')">
             <span class="title">ブラウザ</span>
@@ -249,14 +276,38 @@
                 <button class="close" onclick="closeWindow('browser')">X</button>
             </div>
         </div>
-        <div class="tab-bar" id="browser-tabs">
-            <div class="tab active" onclick="switchTab(this)">New Tab</div>
-            <!-- 新しいタブを追加するためのボタン -->
-            <div class="tab" onclick="newTab()">+</div>
+        <div class="tab-container" id="tab-container-browser">
+            <!-- Tabs will be added dynamically here -->
         </div>
-        <div id="browser-content" style="width: 100%; height: calc(100% - 30px); overflow: auto;">
-            <iframe src="about:blank" frameborder="0" style="width:100%; height: 100%;"></iframe>
+        <div class="tab-content" id="tab-content-browser">
+            <iframe src="about:blank" style="width: 100%; height: calc(100% - 30px); border: none;"></iframe>
         </div>
+    </div>
+
+    <!-- Paint Window -->
+    <div class="window" id="paint">
+        <div class="title-bar" onmousedown="startDrag(event, 'paint')">
+            <span class="title">Paint</span>
+            <div class="window-controls">
+                <button class="minimize" onclick="minimizeWindow('paint')">_</button>
+                <button class="maximize" onclick="maximizeWindow('paint')">[]</button>
+                <button class="close" onclick="closeWindow('paint')">X</button>
+            </div>
+        </div>
+        <canvas id="paint-canvas"></canvas>
+    </div>
+
+    <!-- Other Windows -->
+    <div class="window" id="calc">
+        <div class="title-bar" onmousedown="startDrag(event, 'calc')">
+            <span class="title">電卓</span>
+            <div class="window-controls">
+                <button class="minimize" onclick="minimizeWindow('calc')">_</button>
+                <button class="maximize" onclick="maximizeWindow('calc')">[]</button>
+                <button class="close" onclick="closeWindow('calc')">X</button>
+            </div>
+        </div>
+        <iframe src="https://sakalt.github.io/calc" style="width: 100%; height: calc(100% - 30px); border: none;"></iframe>
     </div>
 
     <div class="window" id="notepad">
@@ -280,114 +331,128 @@
                 <button class="close" onclick="closeWindow('memory-monitor')">X</button>
             </div>
         </div>
-        <div id="memory-monitor-content"></div>
+        <div id="memory-monitor-content">メモリモニタリングの内容</div>
     </div>
 
-    <div class="extension-market" id="extension-market">
-        <div class="title-bar" onmousedown="startDrag(event, 'extension-market')">
-            <span class="title">拡張機能マーケット</span>
-            <div class="window-controls">
-                <button class="minimize" onclick="minimizeWindow('extension-market')">_</button>
-                <button class="maximize" onclick="maximizeWindow('extension-market')">[]</button>
-                <button class="close" onclick="closeWindow('extension-market')">X</button>
-            </div>
-        </div>
-        <div class="extension-market-content">
-            <p>利用可能な拡張機能:</p>
-            <!-- 拡張機能のリストを動的に追加する部分 -->
-            <ul id="extension-list"></ul>
-        </div>
-    </div>
-
+    <!-- Add JavaScript here -->
     <script>
-        // ドラッグ＆ドロップでウィンドウを移動するための関数
-        function startDrag(event, windowId) {
-            var elmnt = document.getElementById(windowId);
-            var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-            event.preventDefault();
-            pos3 = event.clientX;
-            pos4 = event.clientY;
-            document.onmouseup = closeDragElement;
-            document.onmousemove = elementDrag;
+        document.getElementById('start-button').addEventListener('click', function() {
+            const startMenu = document.getElementById('start-menu');
+            startMenu.style.display = startMenu.style.display === 'none' ? 'block' : 'none';
+        });
 
-            function elementDrag(e) {
-                e.preventDefault();
-                pos1 = pos3 - e.clientX;
-                pos2 = pos4 - e.clientY;
-                pos3 = e.clientX;
-                pos4 = e.clientY;
-                elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-                elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
-            }
-
-            function closeDragElement() {
-                document.onmouseup = null;
-                document.onmousemove = null;
-            }
-        }
-
-        // ウィンドウを表示する関数
         function showWindow(windowId) {
-            var elmnt = document.getElementById(windowId);
-            elmnt.style.display = "block";
-        }
+            const windows = document.querySelectorAll('.window');
+            windows.forEach(win => {
+                if (win.id === windowId) {
+                    win.style.display = 'block';
+                } else {
+                    win.style.display = 'none';
+                }
+            });
 
-        // ウィンドウを閉じる関数
-        function closeWindow(windowId) {
-            var elmnt = document.getElementById(windowId);
-            elmnt.style.display = "none";
-        }
-
-        // ウィンドウを最小化する関数
-        function minimizeWindow(windowId) {
-            var elmnt = document.getElementById(windowId);
-            elmnt.style.display = "none";
-        }
-
-        // ウィンドウを最大化する関数
-        function maximizeWindow(windowId) {
-            var elmnt = document.getElementById(windowId);
-            elmnt.style.width = "100%";
-            elmnt.style.height = "100%";
-            elmnt.style.top = "0";
-            elmnt.style.left = "0";
-        }
-
-        // 新しいタブを作成する関数
-        function newTab() {
-            var tabBar = document.getElementById('browser-tabs');
-            var newTab = document.createElement('div');
-            newTab.className = 'tab';
-            newTab.innerText = 'New Tab';
-            newTab.onclick = function() {
-                switchTab(newTab);
-            };
-            tabBar.appendChild(newTab);
-            switchTab(newTab);
-        }
-
-        // タブを切り替える関数
-        function switchTab(tabElement) {
-            var tabs = document.getElementsByClassName('tab');
-            for (var i = 0; i < tabs.length; i++) {
-                tabs[i].classList.remove('active');
+            if (windowId === 'browser') {
+                addTab('New Tab', 'about:blank');
             }
-            tabElement.classList.add('active');
-            // ここにタブの内容を切り替えるロジックを追加
         }
 
-        // コントロールパネルで設定を適用する関数
-        function applyChanges() {
-            var backgroundColor = document.getElementById('background-color').value;
-            var textColor = document.getElementById('text-color').value;
-            var brightness = document.getElementById('brightness').value;
-            var language = document.getElementById('language').value;
-
-            document.body.style.backgroundColor = backgroundColor;
-            document.body.style.color = textColor;
-            document.body.style.filter = 'brightness(' + brightness + '%)';
-            // 言語設定を適用するロジックを追加
+        function minimizeWindow(windowId) {
+            document.getElementById(windowId).style.display = 'none';
         }
+
+        function maximizeWindow(windowId) {
+            const win = document.getElementById(windowId);
+            win.style.width = '100%';
+            win.style.height = '100%';
+        }
+
+        function closeWindow(windowId) {
+            document.getElementById(windowId).style.display = 'none';
+        }
+
+        function startDrag(event, windowId) {
+            const win = document.getElementById(windowId);
+            let offsetX = event.clientX - win.getBoundingClientRect().left;
+            let offsetY = event.clientY - win.getBoundingClientRect().top;
+
+            function dragMove(e) {
+                win.style.left = `${e.clientX - offsetX}px`;
+                win.style.top = `${e.clientY - offsetY}px`;
+            }
+
+            function dragEnd() {
+                document.removeEventListener('mousemove', dragMove);
+                document.removeEventListener('mouseup', dragEnd);
+            }
+
+            document.addEventListener('mousemove', dragMove);
+            document.addEventListener('mouseup', dragEnd);
+        }
+
+        function addTab(title, url) {
+            const tabContainer = document.getElementById('tab-container-browser');
+            const tabId = 'tab-' + (tabContainer.children.length + 1);
+
+            // Create new tab
+            const tab = document.createElement('div');
+            tab.className = 'tab';
+            tab.innerText = title;
+            tab.dataset.tabId = tabId;
+            tab.addEventListener('click', () => {
+                switchTab(tabId);
+            });
+            tabContainer.appendChild(tab);
+
+            // Create new tab content
+            const tabContent = document.createElement('div');
+            tabContent.className = 'tab-content';
+            tabContent.id = tabId;
+            const iframe = document.createElement('iframe');
+            iframe.src = url;
+            iframe.style.width = '100%';
+            iframe.style.height = '100%';
+            iframe.style.border = 'none';
+            tabContent.appendChild(iframe);
+            document.getElementById('tab-content-browser').appendChild(tabContent);
+
+            // Activate new tab
+            switchTab(tabId);
+        }
+
+        function switchTab(tabId) {
+            const tabs = document.querySelectorAll('#tab-container-browser .tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+                document.getElementById(tab.dataset.tabId).classList.remove('active');
+            });
+            document.querySelector(`#tab-container-browser .tab[data-tab-id="${tabId}"]`).classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        // Initialize Paint.js
+        const canvas = document.getElementById('paint-canvas');
+        const ctx = canvas.getContext('2d');
+        let drawing = false;
+
+        canvas.addEventListener('mousedown', (e) => {
+            drawing = true;
+            ctx.moveTo(e.offsetX, e.offsetY);
+        });
+
+        canvas.addEventListener('mouseup', () => {
+            drawing = false;
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+            if (drawing) {
+                ctx.lineTo(e.offsetX, e.offsetY);
+                ctx.stroke();
+            }
+        });
+
+        // Set initial canvas size
+        canvas.width = document.querySelector('.window').clientWidth;
+        canvas.height = document.querySelector('.window').clientHeight - 30;
     </script>
 </body>
 </html>
