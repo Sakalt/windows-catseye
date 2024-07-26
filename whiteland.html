@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows Whiteland</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Courier New', Courier, monospace;
+            background: url('sunset_background.png') no-repeat center center fixed;
+            background-size: cover;
+            color: #00ff00;
+        }
+
+        #start-button {
+            cursor: pointer;
+            background-image: url('icon1.png');
+            width: 40px;
+            height: 40px;
+            background-size: cover;
+            position: absolute;
+            bottom: 20px;
+            left: 10px;
+        }
+
+        #start-menu {
+            position: absolute;
+            left: 10px;
+            bottom: 70px;
+            width: 250px;
+            background-color: #1a1a1a;
+            color: #00ff00;
+            border: 2px solid #666;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+            display: none;
+            z-index: 1000;
+        }
+
+        #start-menu ul {
+            list-style: none;
+            padding: 10px;
+            margin: 0;
+        }
+
+        #start-menu ul li {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        #start-menu ul li:hover {
+            background-color: #333;
+        }
+
+        .window {
+            position: absolute;
+            width: 300px;
+            height: 200px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid #00ff00;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+            border-radius: 5px;
+            z-index: 1000;
+            resize: both;
+            overflow: auto;
+            display: none;
+        }
+
+        .title-bar {
+            background: #1a1a1a;
+            color: #00ff00;
+            padding: 5px;
+            cursor: move;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .window-controls {
+            display: flex;
+        }
+
+        .window-controls button {
+            border: none;
+            color: #00ff00;
+            font-size: 14px;
+            width: 30px;
+            height: 30px;
+            border-radius: 5px;
+            margin: 0 2px;
+            cursor: pointer;
+            background: #1a1a1a;
+            transition: background 0.3s ease;
+        }
+
+        .window-controls button:hover {
+            background: #333;
+        }
+
+        .window-controls button:active {
+            background: #666;
+        }
+
+        .tab-bar {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            background: #333;
+            padding: 5px;
+            border-bottom: 1px solid #00ff00;
+        }
+
+        .tab {
+            padding: 5px 10px;
+            cursor: pointer;
+            background: #1a1a1a;
+            color: #00ff00;
+            margin-right: 5px;
+            border-radius: 5px;
+        }
+
+        .tab.active {
+            background: #00ff00;
+            color: #1a1a1a;
+        }
+
+        .extension-market {
+            position: absolute;
+            top: 50px;
+            left: 50px;
+            width: 500px;
+            height: 400px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid #00ff00;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+            border-radius: 5px;
+            z-index: 1000;
+            resize: both;
+            overflow: auto;
+            display: none;
+        }
+
+        .extension-market-content {
+            padding: 10px;
+            color: #00ff00;
+        }
+
+        #control-panel {
+            display: none;
+            position: absolute;
+            top: 50px;
+            left: 50px;
+            width: 300px;
+            height: 200px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid #00ff00;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+            border-radius: 5px;
+            z-index: 1000;
+            resize: both;
+            overflow: auto;
+            padding: 10px;
+        }
+
+        #control-panel h2 {
+            margin-top: 0;
+            color: #00ff00;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: rgba(0, 0, 0, 0.9);
+            color: #00ff00;
+            font-family: 'Courier New', Courier, monospace;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        #memory-monitor-content {
+            padding: 10px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <audio id="startup-sound" src="cc9b71e3-e4aa-4e73-9397-906b6dece724.webm" preload="auto"></audio>
+
+    <div id="start-button"></div>
+    <div class="divider"></div>
+
+    <div id="start-menu">
+        <ul>
+            <li onclick="showWindow('browser')">ブラウザ</li>
+            <li onclick="showWindow('paint')">Paint</li>
+            <li onclick="showWindow('migdal')">Migdal</li>
+            <li onclick="showWindow('calc')">Calc</li>
+            <li onclick="showWindow('notepad')">Notepad</li>
+            <li onclick="showWindow('memory-monitor')">メモリモニタリング</li>
+            <li onclick="showWindow('timer')">タイマー</li>
+            <li onclick="showWindow('weather')">天気予報</li>
+            <li onclick="showWindow('control-panel')">コントロールパネル</li>
+            <li onclick="showWindow('extension-market')">拡張機能マーケット</li>
+        </ul>
+    </div>
+
+    <div id="control-panel">
+        <h2>コントロールパネル</h2>
+        <label for="background-color">背景色:</label>
+        <input type="color" id="background-color" value="#000000">
+        
+        <label for="text-color">テキスト色:</label>
+        <input type="color" id="text-color" value="#00ff00">
+        
+        <label for="brightness">明るさ:</label>
+        <input type="range" id="brightness" min="0" max="100" value="100">
+        
+        <label for="language">言語:</label>
+        <select id="language">
+            <option value="ja">日本語</option>
+            <option value="en">English</option>
+            <option value="vi">Tiếng Việt</option>
+        </select>
+        
+        <button onclick="applyChanges()">変更を適用</button>
+    </div>
+
+    <div class="window" id="dictionary">
+        <div class="title-bar" onmousedown="startDrag(event, 'dictionary')">
+            <span class="title">辞書</span>
+            <div class="window-controls">
+                <button class="minimize" onclick="minimizeWindow('dictionary')">_</button>
+                <button class="maximize" onclick="maximizeWindow('dictionary')">[]</button>
+                <button class="close" onclick="closeWindow('dictionary')">X</button>
+            </div>
+        </div>
+        <iframe src="https://amuhiku.netlify.app" frameborder="0" style="width:100%;height:calc(100% - 30px);"></iframe>
+    </div>
+
+    <div class="window" id="browser">
+        <div class="title-bar" onmousedown="startDrag(event, 'browser')">
+            <span class="title">ブラウザ</span>
+            <div class="window-controls">
+                <button class="minimize" onclick="minimizeWindow('browser')">_</button>
+                <button class="maximize" onclick="maximizeWindow('browser')">[]</button>
+                <button class="close" onclick="closeWindow('browser')">X</button>
+            </div>
+        </div>
+        <div class="tab-bar" id="browser-tabs">
+            <div class="tab active" onclick="switchTab(this)">New Tab</div>
+            <!-- 新しいタブを追加するためのボタン -->
+            <div class="tab" onclick="newTab()">+</div>
+        </div>
+        <div id="browser-content" style="width: 100%; height: calc(100% - 30px); overflow: auto;">
+            <iframe src="about:blank" frameborder="0" style="width:100%; height: 100%;"></iframe>
+        </div>
+    </div>
+
+    <div class="window" id="notepad">
+        <div class="title-bar" onmousedown="startDrag(event, 'notepad')">
+            <span class="title">Notepad</span>
+            <div class="window-controls">
+                <button class="minimize" onclick="minimizeWindow('notepad')">_</button>
+                <button class="maximize" onclick="maximizeWindow('notepad')">[]</button>
+                <button class="close" onclick="closeWindow('notepad')">X</button>
+            </div>
+        </div>
+        <textarea id="notepad-content"></textarea>
+    </div>
+
+    <div class="window" id="memory-monitor">
+        <div class="title-bar" onmousedown="startDrag(event, 'memory-monitor')">
+            <span class="title">メモリモニタリング</span>
+            <div class="window-controls">
+                <button class="minimize" onclick="minimizeWindow('memory-monitor')">_</button>
+                <button class="maximize" onclick="maximizeWindow('memory-monitor')">[]</button>
+                <button class="close" onclick="closeWindow('memory-monitor')">X</button>
+            </div>
+        </div>
+        <div id="memory-monitor-content"></div>
+    </div>
+
+    <div class="extension-market" id="extension-market">
+        <div class="title-bar" onmousedown="startDrag(event, 'extension-market')">
+            <span class="title">拡張機能マーケット</span>
+            <div class="window-controls">
+                <button class="minimize" onclick="minimizeWindow('extension-market')">_</button>
+                <button class="maximize" onclick="maximizeWindow('extension-market')">[]</button>
+                <button class="close" onclick="closeWindow('extension-market')">X</button>
+            </div>
+        </div>
+        <div class="extension-market-content">
+            <p>利用可能な拡張機能:</p>
+            <!-- 拡張機能のリストを動的に追加する部分 -->
+            <ul id="extension-list"></ul>
+        </div>
+    </div>
+
+    <script>
+        // ドラッグ＆ドロップでウィンドウを移動するための関数
+        function startDrag(event, windowId) {
+            var elmnt = document.getElementById(windowId);
+            var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+            event.preventDefault();
+            pos3 = event.clientX;
+            pos4 = event.clientY;
+            document.onmouseup = closeDragElement;
+            document.onmousemove = elementDrag;
+
+            function elementDrag(e) {
+                e.preventDefault();
+                pos1 = pos3 - e.clientX;
+                pos2 = pos4 - e.clientY;
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+                elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+            }
+
+            function closeDragElement() {
+                document.onmouseup = null;
+                document.onmousemove = null;
+            }
+        }
+
+        // ウィンドウを表示する関数
+        function showWindow(windowId) {
+            var elmnt = document.getElementById(windowId);
+            elmnt.style.display = "block";
+        }
+
+        // ウィンドウを閉じる関数
+        function closeWindow(windowId) {
+            var elmnt = document.getElementById(windowId);
+            elmnt.style.display = "none";
+        }
+
+        // ウィンドウを最小化する関数
+        function minimizeWindow(windowId) {
+            var elmnt = document.getElementById(windowId);
+            elmnt.style.display = "none";
+        }
+
+        // ウィンドウを最大化する関数
+        function maximizeWindow(windowId) {
+            var elmnt = document.getElementById(windowId);
+            elmnt.style.width = "100%";
+            elmnt.style.height = "100%";
+            elmnt.style.top = "0";
+            elmnt.style.left = "0";
+        }
+
+        // 新しいタブを作成する関数
+        function newTab() {
+            var tabBar = document.getElementById('browser-tabs');
+            var newTab = document.createElement('div');
+            newTab.className = 'tab';
+            newTab.innerText = 'New Tab';
+            newTab.onclick = function() {
+                switchTab(newTab);
+            };
+            tabBar.appendChild(newTab);
+            switchTab(newTab);
+        }
+
+        // タブを切り替える関数
+        function switchTab(tabElement) {
+            var tabs = document.getElementsByClassName('tab');
+            for (var i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove('active');
+            }
+            tabElement.classList.add('active');
+            // ここにタブの内容を切り替えるロジックを追加
+        }
+
+        // コントロールパネルで設定を適用する関数
+        function applyChanges() {
+            var backgroundColor = document.getElementById('background-color').value;
+            var textColor = document.getElementById('text-color').value;
+            var brightness = document.getElementById('brightness').value;
+            var language = document.getElementById('language').value;
+
+            document.body.style.backgroundColor = backgroundColor;
+            document.body.style.color = textColor;
+            document.body.style.filter = 'brightness(' + brightness + '%)';
+            // 言語設定を適用するロジックを追加
+        }
+    </script>
+</body>
+</html>
