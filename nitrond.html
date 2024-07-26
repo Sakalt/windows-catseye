@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows Nitrond</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+        #background {
+            background-color: #1e90ff;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            z-index: -1;
+        }
+        #taskbar {
+            background: rgba(0, 0, 0, 0.5);
+            height: 40px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+        }
+        #start-icon {
+            height: 30px;
+            cursor: pointer;
+        }
+        #start-menu {
+            display: none;
+            position: absolute;
+            bottom: 40px;
+            left: 10px;
+            width: 200px;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        #start-menu ul {
+            list-style: none;
+            padding: 10px;
+            margin: 0;
+        }
+        #start-menu li {
+            padding: 10px;
+            cursor: pointer;
+        }
+        #start-menu li:hover {
+            background: #f0f0f0;
+        }
+        .window {
+            width: 400px;
+            height: 300px;
+            background: white;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            position: absolute;
+            display: none;
+        }
+        .window-header {
+            background: #0078d7;
+            color: white;
+            padding: 10px;
+            cursor: move;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .window-body {
+            padding: 10px;
+            height: calc(100% - 40px);
+            overflow: auto;
+        }
+        .window-buttons {
+            display: flex;
+        }
+        .window-buttons span {
+            margin-left: 10px;
+            cursor: pointer;
+        }
+        #bluescreen {
+            display: none;
+            background: #0000ff;
+            color: white;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            padding-top: 200px;
+            font-size: 24px;
+        }
+    </style>
+    <script>
+        function toggleStartMenu() {
+            const startMenu = document.getElementById('start-menu');
+            startMenu.style.display = startMenu.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function openApp(appId) {
+            const app = document.getElementById(appId);
+            app.style.display = 'block';
+        }
+
+        function closeWindow(appId) {
+            const app = document.getElementById(appId);
+            app.style.display = 'none';
+        }
+
+        function minimizeWindow(appId) {
+            const app = document.getElementById(appId);
+            app.style.display = 'none';
+        }
+
+        function maximizeWindow(appId) {
+            const app = document.getElementById(appId);
+            app.style.width = app.style.width === '100%' ? '400px' : '100%';
+            app.style.height = app.style.height === '100%' ? '300px' : '100%';
+            app.style.top = app.style.top === '0' ? '' : '0';
+            app.style.left = app.style.left === '0' ? '' : '0';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('start-icon').addEventListener('click', toggleStartMenu);
+        });
+    </script>
+</head>
+<body>
+    <div id="background"></div>
+    <div id="taskbar">
+        <img src="icon1.png" alt="Start Icon" id="start-icon">
+    </div>
+    <div id="start-menu">
+        <ul>
+            <li onclick="openApp('word')">Word</li>
+            <li onclick="openApp('excel')">Excel</li>
+            <li onclick="openApp('powerpoint')">PowerPoint</li>
+            <li onclick="openApp('app4')">ブラウザ</li>
+            <li onclick="openApp('app5')">メモ帳</li>
+            <li onclick="openApp('app6')">電卓</li>
+            <li onclick="openApp('app7')">カレンダー</li>
+            <li onclick="openApp('app8')">天気</li>
+            <li onclick="openApp('app9')">マップ</li>
+            <li onclick="openApp('app10')">メール</li>
+            <li onclick="openApp('app11')">音楽プレイヤー</li>
+            <li onclick="openApp('app12')">ビデオプレイヤー</li>
+            <li onclick="openApp('app13')">設定</li>
+        </ul>
+    </div>
+    <div class="window" id="word">
+        <div class="window-header">
+            Word
+            <div class="window-buttons">
+                <span onclick="minimizeWindow('word')">_</span>
+                <span onclick="maximizeWindow('word')">[ ]</span>
+                <span onclick="closeWindow('word')">X</span>
+            </div>
+        </div>
+        <div class="window-body">
+            <textarea style="width: 100%; height: 100%;">Wordアプリのコンテンツ</textarea>
+        </div>
+    </div>
+    <div class="window" id="excel">
+        <div class="window-header">
+            Excel
+            <div class="window-buttons">
+                <span onclick="minimizeWindow('excel')">_</span>
+                <span onclick="maximizeWindow('excel')">[ ]</span>
+                <span onclick="closeWindow('excel')">X</span>
+            </div>
+        </div>
+        <div class="window-body">
+            <table border="1" style="width: 100%; height: 100%;">
+                <tr><td>Excel</td><td>アプリ</td></tr>
+                <tr><td>コンテンツ</td><td>内容</td></tr>
+            </table>
+        </div>
+    </div>
+    <div class="window" id="powerpoint">
+        <div class="window-header">
+            PowerPoint
+            <div class="window-buttons">
+                <span onclick="minimizeWindow('powerpoint')">_</span>
+                <span onclick="maximizeWindow('powerpoint')">[ ]</span>
+                <span onclick="closeWindow('powerpoint')">X</span>
+            </div>
+        </div>
+        <div class="window-body">
+            <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
+                PowerPointアプリのコンテンツ
+            </div>
+        </div>
+    </div>
+    <div class="window" id="app4">
+        <div class="window-header">
+            ブラウザ
+            <div class="window-buttons">
+                <span onclick="minimizeWindow('app4')">_</span>
+                <span onclick="maximizeWindow('app4')">[ ]</span>
+                <span onclick="closeWindow('app4')">X</span>
+            </div>
+        </div>
+        <div class="window-body">
+            <iframe src="https://www.bing.com" style="width: 100%; height: 100%;"></iframe>
+        </div>
+    </div>
+    <div class="window" id="app5">
+        <div class="window-header">
+            メモ帳
+            <div class="window-buttons">
+                <span onclick="minimizeWindow('app5')">_</span>
+                <span onclick="maximizeWindow('app5')">[ ]</span>
+                <span onclick="closeWindow('app5')">X</span>
+            </div>
+        </div>
+        <div class="window-body">
+            <textarea style="width: 100%; height: 100%;">メモをここに入力してください</textarea>
+        </div>
+    </div>
+    <div class="window" id="app6">
+        <div class="window-header">
+            電卓
+            <div class="window-buttons">
+                <span onclick="minimizeWindow('app6')">_</span>
+                <span onclick="maximizeWindow('app6')">[ ]</span>
+                <span onclick="closeWindow('app6')">X</span>
+            </div>
+        </div>
+        <div class="window-body">
+            <iframe src="https://sakalt.github.io/calc" style="width: 100%; height: 100%;"></iframe>
+        </div>
+    </div>
+    <div class="window" id="app7">
+        <div class="window-header">
+            カレンダー
+            <div class="window-buttons">
+                <span onclick="minimizeWindow('app7')">_</span>
+                <span onclick="maximizeWindow('app7')">[ ]</span>
+                <span onclick="closeWindow('app7')">X</span>
+            </div>
+        </div>
+        <div class="window-body">
+            <iframe src="https://example.com/calendar" style="width: 100%; height: 100%;"></iframe>
+        </div>
+    </div>
+    <div class="window" id="app8">
+        <div class="window-header">
+            天気
+            <div class="window-buttons">
+                <span onclick="minimizeWindow('app8')">_</span>
+                <span onclick="maximizeWindow('app8')">[ ]</span>
+                <span onclick="closeWindow('app8')">X</span>
+            </div>
+        </div>
+        <div class="window-body">
+            <iframe src="https://weather.com" style="width: 100%; height: 100%;"></iframe>
+        </div>
+    </div>
+    <div class="window" id="app9">
+        <div class="window-header">
+            マップ
+            <div class="window-buttons">
+                <span onclick="minimizeWindow('app9')">_</span>
+                <span onclick="maximizeWindow('app9')">[ ]</span>
+                <span onclick="closeWindow('app9')">X</span>
+            </div>
+        </div>
+        <div class="window-body">
+            <iframe src="https://maps.google.com" style="width: 100%; height: 100%;"></iframe>
+        </div>
+    </div>
+    <div class="window" id="app10">
+        <div class="window-header">
+            メール
+            <div class="window-buttons">
+                <span onclick="minimizeWindow('app10')">_</span>
+                <span onclick="maximizeWindow('app10')">[ ]</span>
+                <span onclick="closeWindow('app10')">X</span>
+            </div>
+        </div>
+        <div class="window-body">
+            <iframe src="https://outlook.com" style="width: 100%; height: 100%;"></iframe>
+        </div>
+    </div>
+    <div class="window" id="app11">
+        <div class="window-header">
+            音楽プレイヤー
+            <div class="window-buttons">
+                <span onclick="minimizeWindow('app11')">_</span>
+                <span onclick="maximizeWindow('app11')">[ ]</span>
+                <span onclick="closeWindow('app11')">X</span>
+            </div>
+        </div>
+        <div class="window-body">
+            <iframe src="https://example.com/music" style="width: 100%; height: 100%;"></iframe>
+        </div>
+    </div>
+    <div class="window" id="app12">
+        <div class="window-header">
+            ビデオプレイヤー
+            <div class="window-buttons">
+                <span onclick="minimizeWindow('app12')">_</span>
+                <span onclick="maximizeWindow('app12')">[ ]</span>
+                <span onclick="closeWindow('app12')">X</span>
+            </div>
+        </div>
+        <div class="window-body">
+            <iframe src="https://example.com/video" style="width: 100%; height: 100%;"></iframe>
+        </div>
+    </div>
+    <div class="window" id="app13">
+        <div class="window-header">
+            設定
+            <div class="window-buttons">
+                <span onclick="minimizeWindow('app13')">_</span>
+                <span onclick="maximizeWindow('app13')">[ ]</span>
+                <span onclick="closeWindow('app13')">X</span>
+            </div>
+        </div>
+        <div class="window-body">
+            <iframe src="https://example.com/settings" style="width: 100%; height: 100%;"></iframe>
+        </div>
+    </div>
+    <div id="bluescreen">
+        <p>ブルースクリーンエラーが発生しました。</p>
+    </div>
+</body>
+</html>
