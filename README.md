@@ -8,7 +8,7 @@ https://sakalt.github.io/windows-catseye/lux.html
 
 https://sakalt.github.io/windows-catseye/whiteland.html
 
-
+起動音は@MylarDaleToloMDTTVから引用
 https://sakalt.github.io/windows-catseye/nitrond.html
 
 
